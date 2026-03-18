@@ -1,0 +1,1835 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Arial,sans-serif;font-size:12px;color:#1e293b;background:#f0f4f8;}
+
+/* AUTH SCREENS */
+.auth-wrap{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#0d1b35;padding:20px;}
+.auth-logo-wrap{text-align:center;margin-bottom:22px;}
+.auth-card{background:#fff;border-radius:16px;padding:26px 28px;width:100%;max-width:460px;box-shadow:0 24px 64px rgba(0,0,0,0.4);}
+.auth-tabs{display:flex;background:#f0f4f8;border-radius:10px;padding:3px;margin-bottom:20px;gap:3px;}
+.auth-tab{flex:1;padding:8px;text-align:center;cursor:pointer;font-weight:700;font-size:12px;border:none;background:transparent;color:#8898aa;font-family:Arial,sans-serif;border-radius:8px;transition:all 0.18s;}
+.auth-tab.active{background:#fff;color:#0d1b35;box-shadow:0 1px 4px rgba(0,0,0,0.12);}
+.fg{display:flex;flex-direction:column;gap:5px;margin-bottom:13px;}
+.fg label{font-size:11px;font-weight:700;color:#5a6475;display:flex;align-items:center;gap:4px;}
+.fg .inp-wrap{position:relative;display:flex;}
+.fg .inp-wrap input{flex:1;padding:10px 38px 10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;background:#fff;color:#1e293b;transition:border 0.15s;font-family:Arial,sans-serif;}
+.fg .inp-wrap input:focus{outline:none;border-color:#f6a623;background:#fffdf8;}
+.fg .inp-wrap input.valid{border-color:#2ecc71;}
+.fg .inp-wrap input.invalid{border-color:#e74c3c;}
+.fg select{padding:10px 12px;border:1.5px solid #e2e8f0;border-radius:8px;font-size:13px;background:#fff;color:#1e293b;font-family:Arial,sans-serif;}
+.fg select:focus{outline:none;border-color:#f6a623;}
+.fg .hint{font-size:11px;margin-top:2px;min-height:14px;}
+.hint.ok{color:#1a7a45;} .hint.err{color:#c0392b;} .hint.info{color:#8898aa;}
+.eye-btn{position:absolute;right:10px;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;color:#8898aa;font-size:16px;padding:2px;line-height:1;}
+.eye-btn:hover{color:#1a2744;}
+.btn-auth{width:100%;padding:11px;border-radius:9px;border:none;cursor:pointer;font-size:13px;font-weight:700;font-family:Arial,sans-serif;background:#f6a623;color:#fff;margin-top:8px;transition:all 0.15s;letter-spacing:0.3px;}
+.btn-auth:hover{background:#e8971a;transform:translateY(-1px);}
+.btn-auth:active{transform:translateY(0);}
+.btn-auth.sec{background:#0d1b35;}
+.btn-auth.sec:hover{background:#1a2e5a;}
+.auth-msg{border-radius:8px;padding:10px 13px;font-size:12px;margin-bottom:14px;display:flex;align-items:flex-start;gap:8px;}
+.auth-msg.err{background:#fde8e8;color:#c0392b;border-left:3px solid #e74c3c;}
+.auth-msg.ok{background:#d4f5e3;color:#1a7a45;border-left:3px solid #2ecc71;}
+.auth-footer{color:rgba(255,255,255,0.4);font-size:10px;text-align:center;margin-top:16px;}
+.admin-hint{background:#1a2744;border-radius:10px;padding:12px 14px;margin-bottom:18px;border-left:3px solid #f6a623;}
+.admin-hint p{color:rgba(255,255,255,0.7);font-size:11px;line-height:1.9;margin:0;}
+.admin-hint code{background:rgba(246,166,35,0.2);color:#f6a623;padding:1px 6px;border-radius:4px;font-size:11px;}
+.divider{display:flex;align-items:center;gap:10px;margin:14px 0;}
+.divider hr{flex:1;border:none;border-top:1px solid #e2e8f0;}
+.divider span{color:#aab0bc;font-size:11px;white-space:nowrap;}
+.step-bar{display:flex;align-items:center;gap:0;margin-bottom:18px;}
+.step{flex:1;text-align:center;font-size:10px;font-weight:700;padding:6px 4px;color:#aab0bc;}
+.step.done{color:#2ecc71;} .step.active{color:#f6a623;}
+.step-line{width:20px;height:1px;background:#e2e8f0;flex-shrink:0;}
+.step-line.done{background:#2ecc71;}
+
+/* MAIN APP */
+.topbar{background:#0d1b35;display:flex;align-items:center;flex-wrap:wrap;gap:0;}
+.topbar-logo{padding:8px 14px;border-right:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.topbar-user{margin-left:auto;display:flex;align-items:center;gap:10px;padding:0 12px;}
+.topbar-user span{color:rgba(255,255,255,0.7);font-size:11px;}
+.topbar-user strong{color:#f6a623;font-size:11px;}
+.btn-logout{padding:5px 12px;border-radius:5px;border:0.5px solid rgba(255,255,255,0.25);background:transparent;color:rgba(255,255,255,0.7);font-size:11px;cursor:pointer;font-family:Arial,sans-serif;transition:all 0.15s;}
+.btn-logout:hover{background:rgba(255,255,255,0.1);color:#fff;}
+.nav{background:#1a2744;display:flex;align-items:center;flex-wrap:wrap;}
+.tabs{display:flex;overflow-x:auto;flex:1;}
+.tab{color:rgba(255,255,255,0.55);padding:10px 13px;cursor:pointer;border-bottom:3px solid transparent;white-space:nowrap;font-size:12px;font-family:Arial,sans-serif;}
+.tab:hover{color:#fff;}
+.tab.active{color:#fff;border-bottom-color:#f6a623;}
+.content{padding:14px;max-width:1140px;margin:0 auto;font-family:Arial,sans-serif;font-size:12px;color:#1e293b;background:#f0f4f8;min-height:80vh;}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:14px;}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:14px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.card{background:#fff;border-radius:10px;border:0.5px solid #dde3ea;padding:14px;margin-bottom:14px;}
+.card-title{font-size:13px;font-weight:700;color:#1a2744;margin-bottom:12px;display:flex;align-items:center;gap:8px;}
+.stat{background:#f8fafc;border-radius:8px;padding:12px;text-align:center;border:0.5px solid #dde3ea;}
+.stat .v{font-size:20px;font-weight:700;color:#1a2744;line-height:1.2;}
+.stat .l{font-size:10px;color:#8898aa;margin-top:3px;text-transform:uppercase;letter-spacing:0.7px;}
+.stat.gr .v{color:#1a7a45;} .stat.rd .v{color:#c0392b;} .stat.am .v{color:#b7791f;} .stat.bl .v{color:#185fa5;}
+.tbl{width:100%;border-collapse:collapse;font-size:12px;}
+.tbl th{background:#f8fafc;color:#8898aa;font-weight:600;padding:8px 9px;border-bottom:1.5px solid #dde3ea;text-align:left;white-space:nowrap;}
+.tbl td{padding:7px 9px;border-bottom:0.5px solid #f0f4f8;vertical-align:middle;}
+.tbl tr:hover td{background:#fafbff;}
+.badge{display:inline-block;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;}
+.b-in{background:#d4f5e3;color:#1a7a45;} .b-out{background:#fde8e8;color:#c0392b;}
+.b-ok{background:#d4f5e3;color:#1a7a45;} .b-low{background:#fef3cd;color:#856404;} .b-none{background:#fde8e8;color:#c0392b;}
+.cat-section{margin-bottom:18px;}
+.cat-header{display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:8px 8px 0 0;font-weight:700;font-size:12px;}
+.search-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+.search-row input{flex:1;min-width:140px;padding:7px 10px;border:0.5px solid #dde3ea;border-radius:6px;font-size:12px;}
+.search-row select{padding:7px 10px;border:0.5px solid #dde3ea;border-radius:6px;font-size:12px;background:#fff;}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+.btn{padding:7px 14px;border-radius:6px;border:none;cursor:pointer;font-size:12px;font-weight:700;font-family:Arial,sans-serif;transition:opacity 0.15s;}
+.btn:hover{opacity:0.85;}
+.btn-blue{background:#1a2744;color:#fff;} .btn-green{background:#2ecc71;color:#fff;}
+.btn-orange{background:#f6a623;color:#fff;} .btn-red{background:#e74c3c;color:#fff;}
+.btn-gray{background:#f0f4f8;color:#1e293b;border:0.5px solid #dde3ea;}
+.btn-sm{padding:5px 10px;font-size:11px;}
+.alert{padding:9px 12px;border-radius:6px;font-size:12px;margin-bottom:12px;}
+.alert-ok{background:#d4f5e3;color:#1a7a45;} .alert-err{background:#fde8e8;color:#c0392b;} .alert-warn{background:#fef3cd;color:#856404;}
+.empty{text-align:center;padding:28px;color:#8898aa;}
+.scan-box{background:#000;border-radius:10px;overflow:hidden;position:relative;max-width:360px;margin:0 auto;aspect-ratio:4/3;}
+.scan-box video{width:100%;height:100%;object-fit:cover;display:block;}
+.scan-ol{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;}
+.scan-fr{width:160px;height:160px;border:3px solid #f6a623;border-radius:8px;box-shadow:0 0 0 9999px rgba(0,0,0,0.45);}
+.sc{display:none;}
+.found-card{background:#1a2744;color:#fff;border-radius:8px;padding:12px;margin-bottom:10px;text-align:center;}
+.found-card .fid{font-size:18px;font-weight:700;color:#f6a623;}
+.found-card .fnm{font-size:12px;color:rgba(255,255,255,0.8);margin-top:2px;}
+.found-card .fdt{font-size:11px;color:rgba(255,255,255,0.45);margin-top:1px;}
+.type-tog{display:flex;border:0.5px solid #dde3ea;border-radius:8px;overflow:hidden;margin-bottom:10px;}
+.tt-btn{flex:1;padding:8px;text-align:center;cursor:pointer;font-weight:700;font-size:12px;border:none;font-family:Arial,sans-serif;transition:all 0.2s;}
+.tt-in{background:#f0fdf4;color:#1a7a45;} .tt-in.active{background:#2ecc71;color:#fff;}
+.tt-out{background:#fff9f9;color:#c0392b;} .tt-out.active{background:#e74c3c;color:#fff;}
+.qr-wrap{text-align:center;background:#f8fafc;border:0.5px solid #dde3ea;border-radius:8px;padding:14px;display:inline-block;}
+.qr-id{font-family:monospace;font-size:12px;font-weight:700;margin-top:6px;color:#1a2744;}
+@media(max-width:520px){.grid4,.grid3{grid-template-columns:1fr 1fr;}.grid2{grid-template-columns:1fr;}}
+</style>
+
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+<script>
+/* ===== ENM LOGO SVG ===== */
+var ENM_LOGO_SVG = '<svg width="160" height="44" viewBox="0 0 160 44" xmlns="http://www.w3.org/2000/svg">'
+  +'<g transform="translate(2,2)">'
+  /* Gear outer */
+  +'<path d="M18,10 l1.5,-3.5 3,0 1.5,3.5 a8,8 0 0 1 3.5,2l3.8,-0.5 1.5,2.6 -2.5,2.8 a8,8 0 0 1 0,4l2.5,2.8 -1.5,2.6 -3.8,-0.5 a8,8 0 0 1 -3.5,2l-1.5,3.5 -3,0 -1.5,-3.5 a8,8 0 0 1 -3.5,-2l-3.8,0.5 -1.5,-2.6 2.5,-2.8 a8,8 0 0 1 0,-4l-2.5,-2.8 1.5,-2.6 3.8,0.5 a8,8 0 0 1 3.5,-2z" fill="#f6a623" stroke="#e8951a" stroke-width="0.5"/>'
+  /* Gear inner circle */
+  +'<circle cx="20" cy="20" r="5.5" fill="#0d1b35"/>'
+  /* Circuit dot center */
+  +'<circle cx="20" cy="20" r="2" fill="#f6a623"/>'
+  /* Circuit lines from gear */
+  +'<line x1="31" y1="20" x2="38" y2="20" stroke="#f6a623" stroke-width="1.5"/>'
+  +'<line x1="38" y1="20" x2="38" y2="14" stroke="#f6a623" stroke-width="1.5"/>'
+  +'<circle cx="38" cy="14" r="1.5" fill="#f6a623"/>'
+  +'<line x1="38" y1="20" x2="38" y2="26" stroke="#f6a623" stroke-width="1.5"/>'
+  +'<circle cx="38" cy="26" r="1.5" fill="#f6a623"/>'
+  /* Text ENM */
+  +'<text x="44" y="18" font-family="Arial,sans-serif" font-size="15" font-weight="900" letter-spacing="2" fill="#ffffff">ENM</text>'
+  +'<text x="44" y="29" font-family="Arial,sans-serif" font-size="8" font-weight="400" letter-spacing="1" fill="#f6a623">TECHNOLOGIES</text>'
+  +'<line x1="44" y1="32" x2="112" y2="32" stroke="#f6a623" stroke-width="0.5" opacity="0.5"/>'
+  +'<text x="44" y="39" font-family="Arial,sans-serif" font-size="7" font-weight="400" letter-spacing="0.5" fill="rgba(255,255,255,0.45)">ENGINEERING STORE SYSTEM</text>'
+  +'</g></svg>';
+
+/* ENM LOGO for auth screen (larger) */
+var ENM_LOGO_AUTH = '<svg width="220" height="80" viewBox="0 0 220 80" xmlns="http://www.w3.org/2000/svg">'
+  +'<g transform="translate(4,4)">'
+  +'<path d="M30,16 l2.5,-5.5 5,0 2.5,5.5 a13,13 0 0 1 5.5,3.2l6,-0.8 2.5,4.3 -4,4.5 a13,13 0 0 1 0,6.5l4,4.5 -2.5,4.3 -6,-0.8 a13,13 0 0 1 -5.5,3.2l-2.5,5.5 -5,0 -2.5,-5.5 a13,13 0 0 1 -5.5,-3.2l-6,0.8 -2.5,-4.3 4,-4.5 a13,13 0 0 1 0,-6.5l-4,-4.5 2.5,-4.3 6,0.8 a13,13 0 0 1 5.5,-3.2z" fill="#f6a623" stroke="#e8951a" stroke-width="0.7"/>'
+  +'<circle cx="32" cy="32" r="9" fill="#0d1b35"/>'
+  +'<circle cx="32" cy="32" r="3.5" fill="#f6a623"/>'
+  +'<line x1="50" y1="32" x2="60" y2="32" stroke="#f6a623" stroke-width="2"/>'
+  +'<line x1="60" y1="32" x2="60" y2="22" stroke="#f6a623" stroke-width="2"/>'
+  +'<circle cx="60" cy="22" r="2.5" fill="#f6a623"/>'
+  +'<line x1="60" y1="32" x2="60" y2="42" stroke="#f6a623" stroke-width="2"/>'
+  +'<circle cx="60" cy="42" r="2.5" fill="#f6a623"/>'
+  +'<text x="68" y="30" font-family="Arial,sans-serif" font-size="26" font-weight="900" letter-spacing="3" fill="#ffffff">ENM</text>'
+  +'<text x="68" y="44" font-family="Arial,sans-serif" font-size="12" font-weight="700" letter-spacing="2" fill="#f6a623">TECHNOLOGIES</text>'
+  +'<line x1="68" y1="49" x2="195" y2="49" stroke="#f6a623" stroke-width="0.6" opacity="0.4"/>'
+  +'<text x="68" y="58" font-family="Arial,sans-serif" font-size="9.5" fill="rgba(255,255,255,0.55)" letter-spacing="0.5">Engineering Store Management System</text>'
+  +'</g></svg>';
+
+/* ===== CATEGORIES ===== */
+var DEFAULT_CATS={
+  'Boiler Spares':  {color:'#1a2744',bg:'#e8ecf8',icon:'B'},
+  'Burner Spares':  {color:'#7d2a00',bg:'#fde8d8',icon:'F'},
+  'Insulation':     {color:'#0f5e3c',bg:'#d4f5e3',icon:'I'},
+  'Electrical':     {color:'#185fa5',bg:'#ddeeff',icon:'E'},
+  'Hydraulics':     {color:'#4a1580',bg:'#ede8fe',icon:'H'},
+  'Mechanical':     {color:'#5f3800',bg:'#fef3cd',icon:'M'},
+  'Safety & PPE':   {color:'#7a1a1a',bg:'#fde8e8',icon:'S'},
+  'General':        {color:'#444',   bg:'#f0f4f8', icon:'G'}
+};
+var CATS=Object.assign({},DEFAULT_CATS);
+var CAT_COLOURS=[
+  {color:'#1a4a2a',bg:'#d4f0e0'},{color:'#2a1a4a',bg:'#e8d4f0'},
+  {color:'#4a2a1a',bg:'#f0e4d4'},{color:'#1a3a4a',bg:'#d4eaf0'},
+  {color:'#4a1a3a',bg:'#f0d4ea'},{color:'#3a4a1a',bg:'#eaf0d4'},
+  {color:'#1a4a4a',bg:'#d4f0f0'},{color:'#4a3a1a',bg:'#f0ead4'}
+];
+var CAT_COL_IDX=0;
+function nextCatColour(name){
+  var ico=(name||'X').trim().charAt(0).toUpperCase();
+  var col=CAT_COLOURS[CAT_COL_IDX%CAT_COLOURS.length];
+  CAT_COL_IDX++;
+  return {color:col.color,bg:col.bg,icon:ico};
+}
+
+
+var PRELOADED=[
+  {name:'Boiler Water Gauge Glass',cat:'Boiler Spares',unit:'pcs',buyP:45000,sellP:65000,minQ:5,desc:'Boiler water level sight glass tube',loc:'Shelf A1'},
+  {name:'Safety Valve 1/2"',cat:'Boiler Spares',unit:'pcs',buyP:180000,sellP:260000,minQ:3,desc:'Spring-loaded boiler safety valve',loc:'Shelf A1'},
+  {name:'Pressure Gauge 0-16 Bar',cat:'Boiler Spares',unit:'pcs',buyP:55000,sellP:85000,minQ:4,desc:'Boiler steam pressure gauge',loc:'Shelf A2'},
+  {name:'Steam Trap Float Type',cat:'Boiler Spares',unit:'pcs',buyP:320000,sellP:480000,minQ:2,desc:'Float and thermostatic steam trap',loc:'Shelf A2'},
+  {name:'Blow Down Valve 1"',cat:'Boiler Spares',unit:'pcs',buyP:95000,sellP:145000,minQ:4,desc:'Boiler bottom blow down valve',loc:'Shelf A3'},
+  {name:'Feed Water Non-Return Valve',cat:'Boiler Spares',unit:'pcs',buyP:110000,sellP:165000,minQ:3,desc:'Check valve for boiler feed line',loc:'Shelf A3'},
+  {name:'Boiler Gasket Set',cat:'Boiler Spares',unit:'set',buyP:85000,sellP:130000,minQ:5,desc:'Full gasket set for boiler servicing',loc:'Shelf A4'},
+  {name:'Manhole Cover Gasket',cat:'Boiler Spares',unit:'pcs',buyP:35000,sellP:55000,minQ:6,desc:'Rubber/compressed fiber manhole gasket',loc:'Shelf A4'},
+  {name:'Water Level Controller',cat:'Boiler Spares',unit:'pcs',buyP:450000,sellP:680000,minQ:2,desc:'Automatic boiler water level controller',loc:'Shelf A5'},
+  {name:'Feed Check Valve 3/4"',cat:'Boiler Spares',unit:'pcs',buyP:75000,sellP:115000,minQ:4,desc:'Boiler feed water check valve',loc:'Shelf A5'},
+  {name:'Boiler Tube 2" x 3m',cat:'Boiler Spares',unit:'pcs',buyP:120000,sellP:185000,minQ:6,desc:'Fire tube / smoke tube boiler replacement',loc:'Store B1'},
+  {name:'Economizer Tube',cat:'Boiler Spares',unit:'pcs',buyP:95000,sellP:145000,minQ:4,desc:'Economizer heat recovery tube',loc:'Store B1'},
+  {name:'Float Valve Assembly',cat:'Boiler Spares',unit:'pcs',buyP:140000,sellP:210000,minQ:3,desc:'Boiler float valve for water makeup',loc:'Shelf A6'},
+  {name:'Boiler Tube Plug',cat:'Boiler Spares',unit:'pcs',buyP:45000,sellP:65000,minQ:5,desc:'Tube plug for temporarily sealing leaking tubes',loc:'Shelf A7'},
+  {name:'Ignition Electrode',cat:'Burner Spares',unit:'pcs',buyP:55000,sellP:85000,minQ:6,desc:'Burner ignition electrode tip',loc:'Shelf B1'},
+  {name:'Photocell / Flame Sensor',cat:'Burner Spares',unit:'pcs',buyP:95000,sellP:145000,minQ:4,desc:'Flame detection photocell for burner',loc:'Shelf B1'},
+  {name:'Burner Nozzle 0.5 GPH',cat:'Burner Spares',unit:'pcs',buyP:28000,sellP:45000,minQ:10,desc:'Oil burner atomising nozzle',loc:'Shelf B2'},
+  {name:'Burner Nozzle 1.0 GPH',cat:'Burner Spares',unit:'pcs',buyP:30000,sellP:48000,minQ:10,desc:'Oil burner atomising nozzle',loc:'Shelf B2'},
+  {name:'Oil Fuel Filter',cat:'Burner Spares',unit:'pcs',buyP:35000,sellP:55000,minQ:8,desc:'Inline fuel oil filter for burner line',loc:'Shelf B3'},
+  {name:'Solenoid Valve 24V',cat:'Burner Spares',unit:'pcs',buyP:120000,sellP:185000,minQ:4,desc:'Fuel solenoid valve for burner control',loc:'Shelf B3'},
+  {name:'Burner Control Box / Programmer',cat:'Burner Spares',unit:'pcs',buyP:380000,sellP:580000,minQ:2,desc:'Burner sequence programmer',loc:'Shelf B4'},
+  {name:'Oil Pump for Burner',cat:'Burner Spares',unit:'pcs',buyP:260000,sellP:395000,minQ:2,desc:'Fuel oil pump assembly for burner',loc:'Shelf B4'},
+  {name:'Ignition Transformer',cat:'Burner Spares',unit:'pcs',buyP:195000,sellP:295000,minQ:3,desc:'High voltage ignition transformer',loc:'Shelf B5'},
+  {name:'Air Pressure Switch',cat:'Burner Spares',unit:'pcs',buyP:85000,sellP:130000,minQ:4,desc:'Combustion air pressure differential switch',loc:'Shelf B5'},
+  {name:'Burner Motor 0.25kW',cat:'Burner Spares',unit:'pcs',buyP:210000,sellP:320000,minQ:2,desc:'Fan/blower motor for oil burner',loc:'Shelf B6'},
+  {name:'Gas Valve Assembly',cat:'Burner Spares',unit:'pcs',buyP:450000,sellP:680000,minQ:2,desc:'Combination gas valve for gas burner',loc:'Shelf B7'},
+  {name:'Burner Gasket Set',cat:'Burner Spares',unit:'set',buyP:45000,sellP:70000,minQ:5,desc:'Full gasket set for burner servicing',loc:'Shelf B8'},
+  {name:'Rockwool Blanket 50mm',cat:'Insulation',unit:'m2',buyP:32000,sellP:50000,minQ:20,desc:'Mineral wool insulation blanket',loc:'Store C1'},
+  {name:'Rockwool Slab 75mm',cat:'Insulation',unit:'m2',buyP:48000,sellP:72000,minQ:15,desc:'Rigid rockwool slab for pipe and vessel insulation',loc:'Store C1'},
+  {name:'Rockwool Slab 100mm',cat:'Insulation',unit:'m2',buyP:62000,sellP:95000,minQ:10,desc:'Heavy duty rockwool slab, high temp application',loc:'Store C1'},
+  {name:'Ceramic Fibre Blanket 25mm',cat:'Insulation',unit:'m2',buyP:85000,sellP:130000,minQ:8,desc:'High temperature ceramic fibre, 1260C rated',loc:'Store C2'},
+  {name:'Aluminium Cladding Sheet 0.7mm',cat:'Insulation',unit:'m2',buyP:18000,sellP:28000,minQ:40,desc:'Alloy 1050 H14 aluminium cladding for insulation',loc:'Store C3'},
+  {name:'Calcium Silicate Board 50mm',cat:'Insulation',unit:'m2',buyP:95000,sellP:145000,minQ:10,desc:'High density calcium silicate board',loc:'Store C3'},
+  {name:'Aluminium Foil Tape 75mm',cat:'Insulation',unit:'roll',buyP:22000,sellP:35000,minQ:10,desc:'Self-adhesive aluminium foil sealing tape',loc:'Store C4'},
+  {name:'Mineral Wool Pipe Section 2"',cat:'Insulation',unit:'pcs',buyP:35000,sellP:55000,minQ:12,desc:'Pre-formed mineral wool pipe insulation',loc:'Store C5'},
+  {name:'Thermocouple Type K',cat:'Electrical',unit:'pcs',buyP:45000,sellP:70000,minQ:6,desc:'K-type thermocouple temperature sensor',loc:'Shelf D1'},
+  {name:'Temperature Controller PID',cat:'Electrical',unit:'pcs',buyP:185000,sellP:280000,minQ:3,desc:'Digital PID temperature controller',loc:'Shelf D1'},
+  {name:'Pressure Switch 1-10 Bar',cat:'Electrical',unit:'pcs',buyP:95000,sellP:145000,minQ:4,desc:'Adjustable pressure switch for boiler cutout',loc:'Shelf D2'},
+  {name:'Contactor 25A 3-phase',cat:'Electrical',unit:'pcs',buyP:65000,sellP:98000,minQ:4,desc:'3-phase motor contactor for pump/fan control',loc:'Shelf D2'},
+  {name:'Circuit Breaker 16A',cat:'Electrical',unit:'pcs',buyP:35000,sellP:55000,minQ:6,desc:'Miniature circuit breaker MCB',loc:'Shelf D3'},
+  {name:'Control Cable 1.5mm 3-core',cat:'Electrical',unit:'m',buyP:4500,sellP:7000,minQ:100,desc:'Multicore shielded control cable',loc:'Shelf D3'},
+  {name:'Bearing 6205 ZZ',cat:'Mechanical',unit:'pcs',buyP:28000,sellP:45000,minQ:6,desc:'Deep groove ball bearing 25x52x15mm',loc:'Shelf E1'},
+  {name:'Bearing 6206 ZZ',cat:'Mechanical',unit:'pcs',buyP:32000,sellP:50000,minQ:6,desc:'Deep groove ball bearing 30x62x16mm',loc:'Shelf E1'},
+  {name:'V-Belt B60',cat:'Mechanical',unit:'pcs',buyP:22000,sellP:35000,minQ:8,desc:'Classical V-belt for pump drives',loc:'Shelf E2'},
+  {name:'Mechanical Seal 20mm',cat:'Mechanical',unit:'pcs',buyP:55000,sellP:85000,minQ:4,desc:'Pump mechanical seal',loc:'Shelf E2'},
+  {name:'Oil Seal 35x52x8mm',cat:'Mechanical',unit:'pcs',buyP:15000,sellP:24000,minQ:8,desc:'Rotary shaft oil seal',loc:'Shelf E3'},
+  {name:'Chemical Descaler 20L',cat:'General',unit:'tin',buyP:280000,sellP:420000,minQ:3,desc:'Boiler chemical descaling agent, 20 litre',loc:'Store F1'},
+  {name:'Neutralizer 20L',cat:'General',unit:'tin',buyP:320000,sellP:480000,minQ:3,desc:'Post-descaling neutralizer chemical',loc:'Store F1'},
+  {name:'Tube Brush 2"',cat:'General',unit:'pcs',buyP:25000,sellP:38000,minQ:5,desc:'Mechanical tube cleaning brush',loc:'Shelf F2'},
+  {name:'Dust Mask (Chemical Grade)',cat:'Safety & PPE',unit:'pcs',buyP:8500,sellP:13000,minQ:10,desc:'P3 rated dust/chemical mask',loc:'Shelf G1'},
+  {name:'Safety Gloves Heat Resistant',cat:'Safety & PPE',unit:'pair',buyP:18000,sellP:28000,minQ:8,desc:'High temperature insulation gloves',loc:'Shelf G1'},
+];
+
+/* ===== APP STATE ===== */
+var S={
+  /* auth */
+  screen:'login',
+  authMsg:null,authMsgType:'err',
+  currentUser:null,
+  /* inventory */
+  items:[],txns:[],tab:'dash',scanning:false,stream:null,raf:null,
+  found:null,txnType:'IN',msg:null,addedItem:null,
+  invSearch:'',invCat:'all',hSearch:'',hFilter:'all',seeded:false,loaded:false,regEmail:null,
+  rptTab:'summary',rptFrom:'',rptTo:'',rptCat:'all',
+  /* real-time sync */
+  _cache:{},     /* mirror of all shared storage keys */
+  _lastWrite:0   /* timestamp of last local write — avoids echo */
+};
+
+/* ===== STORAGE ===== */
+/* Safe wrappers — never throw, never silently fail */
+/* ════════════════════════════════════════════════════════════════
+   REAL-TIME SHARED STORAGE ENGINE  v2.0
+   ─────────────────────────────────────────────────────────────
+   SHARED keys  → window.storage(shared:true) — same data for ALL users
+   PRIVATE keys → localStorage per-browser (session, admin password)
+   SYNC ENGINE  → polls every 4 s, auto-refreshes all dashboards
+   ════════════════════════════════════════════════════════════════ */
+
+var SHARED_KEYS=['enm:users','enm:items','enm:txns','enm:cats'];
+var PRIV_PFX='antojam_priv_';
+
+/* ── Private helpers (localStorage, per-browser) ── */
+function pvtGet(k){try{return localStorage.getItem(PRIV_PFX+k);}catch(e){return null;}}
+function pvtSet(k,v){try{localStorage.setItem(PRIV_PFX+k,v);return true;}catch(e){return false;}}
+function pvtDel(k){try{localStorage.removeItem(PRIV_PFX+k);}catch(e){}}
+
+/* ── Shared helpers (window.storage shared:true, cross-user) ── */
+function sharedGet(key){
+  return new Promise(function(res){
+    if(window.storage&&typeof window.storage.get==='function'){
+      window.storage.get(key,true)
+        .then(function(r){res(r?r.value:null);})
+        .catch(function(){
+          try{res(localStorage.getItem('antojam_sh_'+key));}catch(e){res(null);}
+        });
+    } else {
+      try{res(localStorage.getItem('antojam_sh_'+key));}catch(e){res(null);}
+    }
+  });
+}
+function sharedSet(key,val){
+  return new Promise(function(res){
+    if(window.storage&&typeof window.storage.set==='function'){
+      window.storage.set(key,val,true)
+        .then(function(){res(true);})
+        .catch(function(){
+          try{localStorage.setItem('antojam_sh_'+key,val);}catch(e){}
+          res(false);
+        });
+    } else {
+      try{localStorage.setItem('antojam_sh_'+key,val);res(true);}catch(e){res(false);}
+    }
+  });
+}
+
+/* ── Unified dbGet/dbSet/dbDel — routes to shared or private ── */
+function dbGet(key){
+  /* Reads from local cache (populated by syncFromServer) */
+  return S._cache[key]||null;
+}
+function dbSet(key,val){
+  S._cache[key]=val;
+  if(SHARED_KEYS.indexOf(key)>=0){
+    sharedSet(key,val);       /* push to shared store */
+    S._lastWrite=Date.now();  /* mark write time to avoid echo */
+  } else {
+    pvtSet(key,val);
+  }
+  return true;
+}
+function dbDel(key){
+  delete S._cache[key];
+  if(SHARED_KEYS.indexOf(key)>=0){
+    if(window.storage&&typeof window.storage.delete==='function'){
+      window.storage.delete(key,true).catch(function(){});
+    }
+    try{localStorage.removeItem('antojam_sh_'+key);}catch(e){}
+  } else {
+    pvtDel(key);
+  }
+}
+
+/* ── Sync engine: pull remote changes → refresh all dashboards ── */
+var _syncTimer=null;
+
+async function syncFromServer(isInit){
+  try{
+    var changed=false;
+    for(var i=0;i<SHARED_KEYS.length;i++){
+      var key=SHARED_KEYS[i];
+      var remote=await sharedGet(key);
+      if(remote!==S._cache[key]){
+        S._cache[key]=remote;
+        changed=true;
+      }
+    }
+    if(changed&&!isInit&&S.loaded&&S.screen==='app'){
+      reloadFromCache();
+    }
+  }catch(e){}
+}
+
+function reloadFromCache(){
+  try{var ri=S._cache['enm:items'];if(ri)S.items=JSON.parse(ri)||[];}catch(e){}
+  try{var rt=S._cache['enm:txns'];if(rt)S.txns=JSON.parse(rt)||[];}catch(e){}
+  try{
+    var rc=S._cache['enm:cats'];
+    if(rc){var pc=JSON.parse(rc);if(pc&&typeof pc==='object')CATS=Object.assign({},DEFAULT_CATS,pc);}
+  }catch(e){}
+  render();
+  var dot=document.getElementById('sync-dot');
+  if(dot){dot.style.background='#2ecc71';setTimeout(function(){if(dot)dot.style.background='rgba(255,255,255,0.25)';},900);}
+}
+
+function startSyncPolling(){
+  if(_syncTimer)clearInterval(_syncTimer);
+  _syncTimer=setInterval(function(){
+    if(Date.now()-S._lastWrite>1500){syncFromServer(false);}
+  },4000);
+}
+function stopSyncPolling(){
+  if(_syncTimer){clearInterval(_syncTimer);_syncTimer=null;}
+}
+
+async function load(){
+  /* Step 1: Read private session (per-browser) */
+  try{
+    var sessRaw=pvtGet('enm:session');
+    if(sessRaw){
+      var sess=JSON.parse(sessRaw);
+      if(sess&&sess.email&&sess.role){
+        if(sess.email===ADMIN_EMAIL&&sess.role==='Administrator'){
+          S.currentUser=sess;S.screen='app';
+        } else if(sess.role!=='Administrator'){
+          S.currentUser=sess;S.screen='app'; /* verify below after shared data loads */
+        } else {
+          pvtDel('enm:session'); /* stale admin with wrong email */
+        }
+      }
+    }
+  }catch(e){pvtDel('enm:session');}
+
+  /* Step 2: Pull ALL shared keys from server into local cache */
+  await syncFromServer(true);
+
+  /* Step 3: Load categories from cache */
+  try{
+    var rc=S._cache['enm:cats'];
+    if(rc){var pc=JSON.parse(rc);if(pc&&typeof pc==='object')CATS=Object.assign({},DEFAULT_CATS,pc);}
+  }catch(e){}
+
+  /* Step 4: Load inventory from cache */
+  try{var ri=S._cache['enm:items'];if(ri)S.items=JSON.parse(ri)||[];}catch(e){S.items=[];}
+  try{var rt=S._cache['enm:txns'];if(rt)S.txns=JSON.parse(rt)||[];}catch(e){S.txns=[];}
+
+  /* Step 5: Validate staff/supervisor session against shared users */
+  if(S.currentUser&&S.currentUser.role!=='Administrator'){
+    var usersRaw=S._cache['enm:users'];
+    var ul=usersRaw?JSON.parse(usersRaw):[];
+    if(!ul.find(function(u){return u.id===S.currentUser.id&&u.email===S.currentUser.email;})){
+      pvtDel('enm:session');S.currentUser=null;S.screen='login';
+    }
+  }
+
+  S.loaded=true;
+  if(S.screen==='app')startSyncPolling();
+}
+function clearSession(){
+  pvtDel('enm:session');
+  stopSyncPolling();
+  S.currentUser=null;S.screen='login';S.authMsg=null;render();
+}
+function seedData(){
+  var prefix={};
+  PRELOADED.forEach(function(d){
+    var k=catKey(d.cat);
+    prefix[d.cat]=prefix[d.cat]||{k,n:0};
+    prefix[d.cat].n++;
+    var id=k+'-'+prefix[d.cat].n.toString().padStart(3,'0');
+    S.items.push({id,name:d.name,cat:d.cat,unit:d.unit,buyP:d.buyP,sellP:d.sellP,minQ:d.minQ,loc:d.loc,desc:d.desc,qty:0,created:new Date().toISOString()});
+  });
+  saveItems();
+  dbSet('enm:seeded','true');
+}
+function saveItems(){dbSet('enm:items',JSON.stringify(S.items));}
+function saveCats(){dbSet('enm:cats',JSON.stringify(CATS));}
+function saveTxns(){dbSet('enm:txns',JSON.stringify(S.txns));}
+
+/* ===== AUTH HELPERS ===== */
+var ADMIN_EMAIL  = 'ngothomuchiri01@gmail.com';
+var ADMIN_DFLT_PW = 'Admin2026';   /* fallback — always works even if storage fails */
+
+function validEmail(em){
+  return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em);
+}
+
+/* ---- user storage (Staff / Supervisor only) ---- */
+function getUsers(){
+  try{var r=dbGet('enm:users');return r?JSON.parse(r):[];}catch(e){return [];}
+}
+function saveUsers(users){
+  return dbSet('enm:users',JSON.stringify(users));
+}
+
+/* admin pw handled via storageGet/storageSet */
+
+/* ---- helpers ---- */
+function fv(id){var el=document.getElementById(id);return el?el.value:'';}
+function setAuthMsg(msg,type){S.authMsg=msg;S.authMsgType=type;render();}
+
+/* ---- login ---- */
+function doLogin(){
+  var em=fv('log-em').toLowerCase().trim();
+  var pw=fv('log-pw');
+  if(!em)return setAuthMsg('Please enter your email address.','err');
+  if(!pw)return setAuthMsg('Please enter your password.','err');
+  if(!validEmail(em))return setAuthMsg('Invalid email format. Example: john@gmail.com','err');
+
+  /* ADMIN */
+  if(em===ADMIN_EMAIL){
+    var storedPw=pvtGet('enm:adm-pw')||ADMIN_DFLT_PW;
+    if(pw!==storedPw&&pw!==ADMIN_DFLT_PW)
+      return setAuthMsg('Wrong admin password. Please try again.','err');
+    S.currentUser={id:'USR-ADMIN',firstName:'Elisha',lastName:'Muchiri',email:ADMIN_EMAIL,role:'Administrator'};
+    pvtSet('enm:session',JSON.stringify(S.currentUser));
+    S.screen='app';S.authMsg=null;startSyncPolling();render();
+    return;
+  }
+
+  /* STAFF / SUPERVISOR */
+  var users=getUsers();
+  if(!users.length)
+    return setAuthMsg('No accounts yet. Please create an account first.','err');
+  var user=users.find(function(u){return u.email===em&&u.password===pw;});
+  if(!user){
+    var exists=users.find(function(u){return u.email===em;});
+    return setAuthMsg(exists?'Wrong password. Please check and try again.':'Email not registered. Please create an account first.','err');
+  }
+  S.currentUser={id:user.id,firstName:user.firstName,lastName:user.lastName,email:user.email,role:user.role};
+  pvtSet('enm:session',JSON.stringify(S.currentUser));
+  S.screen='app';S.authMsg=null;startSyncPolling();render();
+}
+
+/* ---- register (Staff / Supervisor only) ---- */
+function doRegister(){
+  var fn=fv('reg-fn').trim();
+  var ln=fv('reg-ln').trim();
+  var em=fv('reg-em').toLowerCase().trim();
+  var pw=fv('reg-pw');
+  var cpw=fv('reg-cpw');
+  var role=fv('reg-role')||'Staff';
+
+  if(!fn||fn.length<2)return setAuthMsg('Please enter your first name (min 2 characters).','err');
+  if(!ln||ln.length<2)return setAuthMsg('Please enter your last name (min 2 characters).','err');
+  if(!em)return setAuthMsg('Please enter your email address.','err');
+  if(!validEmail(em))return setAuthMsg('Please enter a valid email e.g. john@gmail.com','err');
+  if(em===ADMIN_EMAIL)return setAuthMsg('That email is reserved. Use a different one.','err');
+  if(!pw||pw.length<6)return setAuthMsg('Password must be at least 6 characters.','err');
+  if(pw!==cpw)return setAuthMsg('Passwords do not match. Please check and try again.','err');
+
+  var users=getUsers();
+  if(users.find(function(u){return u.email===em;}))
+    return setAuthMsg('This email is already registered. Please sign in.','err');
+
+  var newUser={
+    id:'USR-'+Date.now(),
+    firstName:fn,lastName:ln,
+    email:em,password:pw,role:role,
+    created:new Date().toISOString()
+  };
+  users.push(newUser);
+  if(!saveUsers(users))
+    return setAuthMsg('Could not save account — check your browser allows storage.','err');
+
+  /* Save session and log in */
+  S.currentUser={id:newUser.id,firstName:fn,lastName:ln,email:em,role:role};
+  pvtSet('enm:session',JSON.stringify(S.currentUser));
+  S.screen='app';S.authMsg=null;
+  startSyncPolling();render();
+  showMsg('ok','Welcome '+fn+'! Your account has been created and you are now signed in.');
+}
+
+function doLogout(){
+  pvtDel('enm:session');
+  stopSyncPolling();
+  S.currentUser=null;S.screen='login';S.authMsg=null;stopScan();render();
+}
+function v(id){return fv(id);}
+
+/* ===== INVENTORY HELPERS ===== */
+function catKey(cat){return cat.replace(/[^A-Z]/gi,'').substring(0,2).toUpperCase();}
+function genId(cat){var k=catKey(cat);var same=S.items.filter(function(i){return i.cat===cat;});return k+'-'+String(same.length+1).padStart(3,'0');}
+function genTx(){return 'TX-'+String(S.txns.length+1).padStart(5,'0');}
+function fmt(n){return Math.round(Number(n)||0).toLocaleString();}
+function fdt(iso){var d=new Date(iso);return d.toLocaleDateString()+' '+d.toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});}
+function catStyle(cat){return CATS[cat]||CATS['General'];}
+function showMsg(t,m){S.msg={type:t,msg:m};render();setTimeout(function(){S.msg=null;render();},3500);}
+
+function addItem(d){
+  var cat=d.cat||'General';
+  var item={id:genId(cat),name:d.name.trim(),cat,desc:d.desc||'',unit:d.unit||'pcs',buyP:parseFloat(d.buyP)||0,sellP:parseFloat(d.sellP)||0,minQ:parseInt(d.minQ)||5,loc:d.loc||'',qty:parseInt(d.initQ)||0,created:new Date().toISOString()};
+  S.items.push(item);
+  if(item.qty>0){S.txns.push({id:genTx(),iid:item.id,inm:item.name,type:'IN',qty:item.qty,price:item.buyP,total:item.qty*item.buyP,notes:'Opening stock',ts:new Date().toISOString()});}
+  saveItems();saveTxns();
+  S.addedItem=item;render();
+  setTimeout(function(){mkQR(item);},80);
+}
+function recTxn(iid,type,qty,price,notes){
+  var item=S.items.find(function(i){return i.id===iid;});
+  if(!item)return{err:'Item not found'};
+  qty=parseInt(qty)||0;price=parseFloat(price)||0;
+  if(qty<=0)return{err:'Quantity must be greater than 0'};
+  if(type==='OUT'&&item.qty<qty)return{err:'Insufficient stock. Available: '+item.qty+' '+item.unit};
+  item.qty=type==='IN'?item.qty+qty:item.qty-qty;
+  var tx={id:genTx(),iid,inm:item.name,type,qty,price,total:qty*price,notes:notes||'',user:S.currentUser?S.currentUser.firstName+' '+S.currentUser.lastName:'',ts:new Date().toISOString()};
+  S.txns.push(tx);
+  saveItems();saveTxns();
+  return tx;
+}
+function mkQR(item){
+  var el=document.getElementById('qr-out');if(!el||!item)return;el.innerHTML='';
+  try{new QRCode(el,{text:item.id,width:110,height:110,colorDark:'#1a2744',colorLight:'#ffffff'});}
+  catch(e){el.innerHTML='<p style="font-size:11px;color:#888;">QR N/A</p>';}
+}
+async function startScan(){
+  try{S.stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment'}});S.scanning=true;render();
+    setTimeout(function(){var v=document.getElementById('sv'),c=document.getElementById('sc');if(v&&c){v.srcObject=S.stream;v.play();frame(v,c);}},100);
+  }catch(e){showMsg('err','Camera access denied. Use manual entry.');}
+}
+function frame(v,c){
+  if(!S.scanning||!document.contains(v))return;
+  var ctx=c.getContext('2d');c.width=v.videoWidth;c.height=v.videoHeight;
+  if(!c.width){S.raf=requestAnimationFrame(function(){frame(v,c);});return;}
+  ctx.drawImage(v,0,0);
+  var d=ctx.getImageData(0,0,c.width,c.height);
+  var code=jsQR(d.data,c.width,c.height);
+  if(code){var item=S.items.find(function(i){return i.id===code.data;});if(item){stopScan();S.found=item;render();return;}}
+  S.raf=requestAnimationFrame(function(){frame(v,c);});
+}
+function stopScan(){S.scanning=false;if(S.stream){S.stream.getTracks().forEach(function(t){t.stop();});S.stream=null;}if(S.raf){cancelAnimationFrame(S.raf);S.raf=null;}}
+function switchTab(t){
+  if(t!=='scan')stopScan();
+  S.tab=t;S.found=null;S.txnType='IN';S.invSearch='';S.hSearch='';
+  if(t!=='add')S.addedItem=null;
+  render();
+  if(t==='admin')setTimeout(adminLoadUsers,120);
+}
+
+/* ===== RENDER ===== */
+function render(){
+  var root=document.getElementById('root');if(!root)return;
+  if(!S.loaded){root.innerHTML='<div style="min-height:100vh;display:flex;align-items:center;justify-content:center;background:#0d1b35;"><div style="color:#f6a623;font-family:Arial;font-size:14px;">Loading ENM Technologies...</div></div>';return;}
+  if(S.screen==='login'||S.screen==='register'){root.innerHTML=renderAuth();return;}
+  root.innerHTML=renderApp();
+  if(S.tab==='add'&&S.addedItem)setTimeout(function(){mkQR(S.addedItem);},60);
+  if(S.tab==='scan'&&S.scanning&&S.stream)setTimeout(function(){var v=document.getElementById('sv'),c=document.getElementById('sc');if(v&&c){v.srcObject=S.stream;v.play();frame(v,c);}},60);
+}
+
+/* ===== AUTH PAGES ===== */
+function renderAuth(){
+  var isReg=S.screen==='register';
+  var msgHtml=S.authMsg?
+    '<div class="auth-msg '+(S.authMsgType==='ok'?'ok':'err')+'">'+(S.authMsgType==='ok'?'&#10003;':'&#9888;')+' '+S.authMsg+'</div>':'';
+  return '<div class="auth-wrap">'+
+    '<div class="auth-logo-wrap">'+ENM_LOGO_AUTH+'</div>'+
+    '<div class="auth-card">'+
+    '<div class="auth-tabs">'+
+    '<button class="auth-tab'+(isReg?'':' active')+'" onclick="switchAuthTab(\'login\')">Sign In</button>'+
+    '<button class="auth-tab'+(isReg?' active':'')+'" onclick="switchAuthTab(\'register\')">Create Account</button>'+
+    '</div>'+
+    msgHtml+
+    (isReg?renderRegForm():renderLoginForm())+
+    '</div>'+
+    '<div class="auth-footer">ENM Technologies &copy; '+new Date().getFullYear()+'<br>Staff &amp; Supervisors — register once, then sign in with the same credentials.</div>'+
+    '</div>';
+}
+function switchAuthTab(tab){S.screen=tab;S.authMsg=null;render();}
+function togglePw(id){
+  var el=document.getElementById(id);if(!el)return;
+  var btn=document.getElementById('eye-'+id);
+  if(el.type==='password'){el.type='text';if(btn)btn.textContent='&#128064;';}
+  else{el.type='password';if(btn)btn.textContent='&#128065;';}
+}
+function renderLoginForm(){
+  var storageOk=(typeof Storage!=='undefined');
+  return (storageOk?'':
+    '<div style="background:#fef3cd;color:#856404;border-radius:7px;padding:9px 12px;font-size:11px;margin-bottom:12px;border-left:3px solid #f6a623;">'+
+    '&#9888; Storage unavailable — please use a modern browser and allow cookies/storage.</div>')+
+    '<div class="fg"><label>Email Address</label>'+
+    '<div class="inp-wrap"><input id="log-em" type="email" placeholder="your@email.com" autocomplete="email" onkeydown="if(event.key===\'Enter\')doLogin()">'+
+    '</div></div>'+
+    '<div class="fg"><label>Password</label>'+
+    '<div class="inp-wrap"><input id="log-pw" type="password" placeholder="Your password" autocomplete="current-password" onkeydown="if(event.key===\'Enter\')doLogin()">'+
+    '<button class="eye-btn" id="eye-log-pw" onclick="togglePw(\'log-pw\')" type="button">&#128065;</button>'+
+    '</div></div>'+
+    '<button class="btn-auth sec" onclick="doLogin()">Sign In</button>'+
+    '<div style="margin-top:10px;display:flex;justify-content:space-between;font-size:11px;color:#aab0bc;">'+
+    '<span>No account? <span style="color:#0d1b35;cursor:pointer;font-weight:700;" onclick="switchAuthTab(\'register\')">Create one</span></span>'+
+    '<span style="cursor:pointer;" onclick="clearSession()">Clear session</span>'+
+    '</div>';
+}
+function renderRegForm(){
+  return '<p style="font-size:12px;color:#5a6475;margin-bottom:14px;">Create your account below. All fields are required.</p>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px;">'+
+    '<div class="fg"><label>First Name</label>'+
+    '<div class="inp-wrap"><input id="reg-fn" placeholder="John" oninput="liveCheck(\'reg-fn\',\'fn\')"></div>'+
+    '<div class="hint info" id="h-fn"></div></div>'+
+    '<div class="fg"><label>Last Name</label>'+
+    '<div class="inp-wrap"><input id="reg-ln" placeholder="Mwamba" oninput="liveCheck(\'reg-ln\',\'ln\')"></div>'+
+    '<div class="hint info" id="h-ln"></div></div>'+
+    '</div>'+
+    '<div class="fg"><label>Email Address</label>'+
+    '<div class="inp-wrap"><input id="reg-em" type="email" placeholder="your@email.com" oninput="liveCheck(\'reg-em\',\'em\')"></div>'+
+    '<div class="hint info" id="h-em"></div></div>'+
+    '<div class="fg"><label>Role</label>'+
+    '<select id="reg-role" style="cursor:pointer;">'+
+    '<option value="Staff">Staff</option><option value="Supervisor">Supervisor</option>'+
+    '</select></div>'+
+    '<div class="fg"><label>Password</label>'+
+    '<div class="inp-wrap"><input id="reg-pw" type="password" placeholder="At least 6 characters" oninput="liveCheck(\'reg-pw\',\'pw\')">'+
+    '<button class="eye-btn" id="eye-reg-pw" onclick="togglePw(\'reg-pw\')" type="button">&#128065;</button>'+
+    '</div><div class="hint" id="h-pw"></div></div>'+
+    '<div class="fg"><label>Confirm Password</label>'+
+    '<div class="inp-wrap"><input id="reg-cpw" type="password" placeholder="Repeat your password" oninput="liveCheck(\'reg-cpw\',\'cpw\')" onkeydown="if(event.key===\'Enter\')doRegister()">'+
+    '<button class="eye-btn" id="eye-reg-cpw" onclick="togglePw(\'reg-cpw\')" type="button">&#128065;</button>'+
+    '</div><div class="hint" id="h-cpw"></div></div>'+
+    '<button class="btn-auth" onclick="doRegister()" style="margin-top:6px;">Create Account &amp; Sign In</button>'+
+    '<p style="font-size:11px;color:#aab0bc;text-align:center;margin-top:10px;">After creating your account you will be signed in automatically.</p>';
+}
+
+/* ===== MAIN APP ===== */
+function isAdmin(){return S.currentUser&&S.currentUser.email===ADMIN_EMAIL&&S.currentUser.role==='Administrator';}
+function isStaffOrSupervisor(){return S.currentUser&&(S.currentUser.role==='Staff'||S.currentUser.role==='Supervisor');}
+
+function renderApp(){
+  var u=S.currentUser||{};
+  /* If somehow a non-admin lands on admin tab, kick them back to dashboard */
+  if(S.tab==='admin'&&!isAdmin()){S.tab='dash';}
+  if(S.tab==='rpt'&&!S.currentUser){S.tab='login';}
+  var ts=[{id:'dash',l:'Dashboard'},{id:'inv',l:'Inventory'},{id:'add',l:'Add Item'},{id:'scan',l:'Scan'},{id:'hist',l:'History'},{id:'rpt',l:'Reports'}];
+  if(isAdmin())ts.push({id:'admin',l:'Admin Panel'});
+  var topbar='<div class="topbar">'+
+    '<div class="topbar-logo">'+ENM_LOGO_SVG+'</div>'+
+    '<div class="topbar-user">'+
+    '<span style="color:rgba(255,255,255,0.7);font-size:11px;">Welcome, <strong style="color:#f6a623;font-size:12px;">'+u.firstName+' '+u.lastName+'</strong></span>'+
+    '<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(246,166,35,0.18);color:#f6a623;">'+u.role+'</span>'+
+    (isAdmin()?'<span style="font-size:10px;padding:2px 8px;border-radius:20px;background:rgba(231,76,60,0.18);color:#e74c3c;">ADMIN</span>':'')+
+    '<span title="Real-time sync active" style="display:inline-flex;align-items:center;gap:4px;font-size:10px;color:rgba(255,255,255,0.45);">'+
+    '<span id="sync-dot" style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.25);display:inline-block;transition:background 0.4s;"></span>Live</span>'+
+    '<button class="btn-logout" onclick="doLogout()">Logout</button>'+
+    '</div></div>';
+  var nav='<div class="nav"><div class="tabs">'+
+    ts.map(function(t){
+      var isAdminTab=t.id==='admin';
+      return '<div class="tab'+(S.tab===t.id?' active':'')+'" onclick="switchTab(\''+t.id+'\')" style="'+(isAdminTab?'color:rgba(231,76,60,0.8);':'')+(S.tab===t.id&&isAdminTab?'border-bottom-color:#e74c3c;color:#e74c3c;':'')+'">'+t.l+'</div>';
+    }).join('')+
+    '</div></div>';
+  var body='<div class="content">'+(S.msg?'<div class="alert alert-'+S.msg.type+'">'+S.msg.msg+'</div>':'')+page()+'</div>';
+  return topbar+nav+body;
+}
+
+function page(){
+  if(S.tab==='dash')return pgDash();
+  if(S.tab==='inv')return pgInv();
+  if(S.tab==='add')return pgAdd();
+  if(S.tab==='scan')return pgScan();
+  if(S.tab==='hist')return pgHist();
+  if(S.tab==='admin'&&isAdmin())return pgAdmin();
+  if(S.tab==='rpt')return pgReports();
+  return '';
+}
+
+function pgDash(){
+  var cats=Object.keys(CATS).filter(function(c){return S.items.some(function(i){return i.cat===c;});});
+  var totV=S.items.reduce(function(s,i){return s+i.qty*i.sellP;},0);
+  var low=S.items.filter(function(i){return i.qty<=i.minQ;});
+  var rec=[].concat(S.txns).reverse().slice(0,8);
+  var catStats=cats.map(function(c){
+    var ci=S.items.filter(function(i){return i.cat===c;});
+    return {c,cnt:ci.length,qty:ci.reduce(function(s,i){return s+i.qty;},0),cs:catStyle(c)};
+  });
+  return '<div class="grid4">'+
+    '<div class="stat"><div class="v">'+S.items.length+'</div><div class="l">Total SKUs</div></div>'+
+    '<div class="stat gr"><div class="v">TZS '+fmt(totV)+'</div><div class="l">Stock Value</div></div>'+
+    '<div class="stat am"><div class="v">'+low.length+'</div><div class="l">Low/Zero Stock</div></div>'+
+    '<div class="stat bl"><div class="v">'+S.txns.length+'</div><div class="l">Total Transactions</div></div>'+
+    '</div>'+
+    '<div class="card"><div class="card-title">Stock by Category</div>'+
+    '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:8px;">'+
+    catStats.map(function(x){
+      return '<div style="border-radius:8px;padding:10px;background:'+x.cs.bg+';border:0.5px solid '+x.cs.color+'22;">'+
+        '<div style="font-weight:700;font-size:11px;color:'+x.cs.color+';">'+x.c+'</div>'+
+        '<div style="font-size:18px;font-weight:700;color:'+x.cs.color+';margin-top:2px;">'+x.cnt+'<span style="font-size:10px;font-weight:400;margin-left:3px;">SKUs</span></div>'+
+        '<div style="font-size:10px;color:'+x.cs.color+'99;margin-top:1px;">'+x.qty+' units in stock</div></div>';
+    }).join('')+'</div></div>'+
+    (low.length?'<div class="card"><div class="card-title">Low / Zero Stock Alerts</div>'+
+    '<div style="overflow-x:auto;"><table class="tbl"><tr><th>Code</th><th>Item</th><th>Category</th><th>In Stock</th><th>Min Level</th><th>Status</th><th></th></tr>'+
+    low.slice(0,6).map(function(i){
+      var cs=catStyle(i.cat);
+      return '<tr><td><code>'+i.id+'</code></td><td><strong>'+i.name+'</strong></td>'+
+        '<td><span style="font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;background:'+cs.bg+';color:'+cs.color+';">'+i.cat+'</span></td>'+
+        '<td><strong style="color:'+(i.qty===0?'#c0392b':'#b7791f')+'">'+i.qty+' '+i.unit+'</strong></td>'+
+        '<td>'+i.minQ+'</td><td><span class="badge '+(i.qty===0?'b-none':'b-low')+'">'+(i.qty===0?'OUT OF STOCK':'LOW')+'</span></td>'+
+        '<td><button class="btn btn-green btn-sm" onclick="S.found=S.items.find(function(x){return x.id===\''+i.id+'\';});S.txnType=\'IN\';S.tab=\'scan\';render()">Restock</button></td></tr>';
+    }).join('')+'</table></div></div>':'')+'<div class="card"><div class="card-title">Recent Transactions</div>'+
+    (rec.length?'<div style="overflow-x:auto;"><table class="tbl"><tr><th>TXN</th><th>Item</th><th>Category</th><th>Type</th><th>Qty</th><th>Price</th><th>By</th><th>Time</th></tr>'+
+    rec.map(function(t){
+      var it=S.items.find(function(i){return i.id===t.iid;})||{};
+      var cs=catStyle(it.cat||'General');
+      return '<tr><td><code style="font-size:10px;">'+t.id+'</code></td><td>'+t.inm+'</td>'+
+        '<td><span style="font-size:10px;padding:2px 7px;border-radius:20px;font-weight:700;background:'+cs.bg+';color:'+cs.color+';">'+(it.cat||'-')+'</span></td>'+
+        '<td><span class="badge '+(t.type==='IN'?'b-in':'b-out')+'">'+t.type+'</span></td>'+
+        '<td>'+t.qty+'</td><td>TZS '+fmt(t.price)+'</td>'+
+        '<td style="font-size:10px;color:#8898aa;">'+(t.user||'-')+'</td>'+
+        '<td style="color:#8898aa;font-size:10px;">'+fdt(t.ts)+'</td></tr>';
+    }).join('')+'</table></div>':'<div class="empty">No transactions yet.</div>')+'</div>';
+}
+
+function pgInv(){
+  var allCats=['all'].concat(Object.keys(CATS).filter(function(c){return S.items.some(function(i){return i.cat===c;});}));
+  var fl=S.items.filter(function(i){
+    var ms=!S.invSearch||i.name.toLowerCase().includes(S.invSearch.toLowerCase())||i.id.toLowerCase().includes(S.invSearch.toLowerCase());
+    var mc=S.invCat==='all'||i.cat===S.invCat;
+    return ms&&mc;
+  });
+  var grouped={};fl.forEach(function(i){grouped[i.cat]=grouped[i.cat]||[];grouped[i.cat].push(i);});
+  return '<div class="card"><div class="card-title">Inventory &mdash; '+fl.length+' items</div>'+
+    '<div class="search-row">'+
+    '<input placeholder="Search name or code..." value="'+S.invSearch+'" oninput="S.invSearch=this.value;render()">'+
+    '<select onchange="S.invCat=this.value;render()">'+allCats.map(function(c){return '<option value="'+c+'"'+(S.invCat===c?' selected':'')+'>'+( c==='all'?'All Categories':c)+'</option>';}).join('')+'</select>'+
+    '<button class="btn btn-orange btn-sm" onclick="switchTab(\'add\')">+ Add Item</button>'+
+    '</div>'+
+    (fl.length===0?'<div class="empty">No items match your search.</div>':
+    Object.keys(grouped).map(function(cat){
+      var cs=catStyle(cat);var items=grouped[cat];
+      return '<div class="cat-section">'+
+        '<div class="cat-header" style="background:'+cs.bg+';color:'+cs.color+';">'+
+        '<span style="background:'+cs.color+';color:#fff;border-radius:5px;padding:2px 7px;font-size:10px;">'+cs.icon+'</span>'+
+        cat+' <span style="font-weight:400;opacity:0.7;">('+items.length+' items)</span></div>'+
+        '<div style="overflow-x:auto;border:0.5px solid #dde3ea;border-top:none;border-radius:0 0 8px 8px;">'+
+        '<table class="tbl"><tr><th>Code</th><th>Item Name</th><th>In Stock</th><th>Unit</th><th>Buy Price</th><th>Sell Price</th><th>Min Level</th><th>Location</th><th>Status</th></tr>'+
+        items.map(function(i){
+          var st=i.qty===0?'b-none':i.qty<=i.minQ?'b-low':'b-ok';
+          return '<tr>'+
+            '<td><code>'+i.id+'</code></td>'+
+            '<td><strong>'+i.name+'</strong>'+(i.desc?'<br><span style="font-size:10px;color:#8898aa;">'+i.desc.substring(0,50)+'</span>':'')+'</td>'+
+            '<td><strong style="color:'+(i.qty===0?'#c0392b':i.qty<=i.minQ?'#b7791f':'#1a7a45')+'">'+i.qty+'</strong></td>'+
+            '<td>'+i.unit+'</td><td>TZS '+fmt(i.buyP)+'</td><td>TZS '+fmt(i.sellP)+'</td>'+
+            '<td>'+i.minQ+'</td><td>'+(i.loc||'-')+'</td>'+
+            '<td><span class="badge '+st+'">'+(i.qty===0?'OUT OF STOCK':i.qty<=i.minQ?'LOW':'OK')+'</span></td></tr>';
+        }).join('')+'</table></div></div>';
+    }).join(''))+'</div>';
+}
+
+function pgAdd(){
+  var item=S.addedItem;var catList=Object.keys(CATS);
+  return '<div style="display:grid;grid-template-columns:'+(item?'1fr 300px':'1fr')+';gap:14px;align-items:start;">'+
+    '<div class="card"><div class="card-title">Register New Spare Part</div>'+
+    '<form id="af" onsubmit="doAdd(event)">'+
+    '<div class="grid2">'+
+    '<div class="fg" style="grid-column:1/-1"><label>Item Name *</label><input name="name" placeholder="e.g. Burner Nozzle 1.5 GPH, Rockwool Slab 50mm..." required></div>'+
+    '<div class="fg"><label>Category *</label><select name="cat" required>'+catList.map(function(c){return '<option value="'+c+'">'+c+'</option>';}).join('')+'</select></div>'+
+    '<div class="fg"><label>Unit</label><select name="unit"><option value="pcs">pcs</option><option value="set">set</option><option value="m">m</option><option value="m2">m2</option><option value="kg">kg</option><option value="L">L</option><option value="tin">tin</option><option value="box">box</option><option value="roll">roll</option><option value="pair">pair</option></select></div>'+
+    '<div class="fg"><label>Buying Price (TZS)</label><input name="buyP" type="number" min="0" step="any" placeholder="0"></div>'+
+    '<div class="fg"><label>Selling Price (TZS)</label><input name="sellP" type="number" min="0" step="any" placeholder="0"></div>'+
+    '<div class="fg"><label>Opening Qty</label><input name="initQ" type="number" min="0" placeholder="0"></div>'+
+    '<div class="fg"><label>Min Stock Alert</label><input name="minQ" type="number" min="0" placeholder="5"></div>'+
+    '<div class="fg"><label>Storage Location</label><input name="loc" placeholder="e.g. Shelf A1, Store C2"></div>'+
+    '<div class="fg" style="grid-column:1/-1"><label>Description / Part Number</label><textarea name="desc" placeholder="Manufacturer, part number, spec, supplier..." style="min-height:46px;resize:vertical;padding:7px 10px;border:0.5px solid #dde3ea;border-radius:6px;font-size:12px;width:100%;"></textarea></div>'+
+    '</div>'+
+    '<div class="row" style="margin-top:8px;">'+
+    '<button type="submit" class="btn btn-orange">Generate Code + Save</button>'+
+    '<button type="button" class="btn btn-gray" onclick="S.addedItem=null;document.getElementById(\'af\').reset();render()">Clear</button>'+
+    '</div></form></div>'+
+    (item?'<div class="card" style="text-align:center;">'+
+    '<div class="card-title" style="justify-content:center;">Item Created</div>'+
+    '<div id="qr-print"><div class="qr-wrap">'+
+    '<div id="qr-out"></div>'+
+    '<div class="qr-id">'+item.id+'</div>'+
+    '<div style="font-size:12px;font-weight:700;color:#1a2744;margin-top:3px;">'+item.name+'</div>'+
+    '<div style="font-size:10px;color:#8898aa;">'+item.cat+' | '+item.unit+'</div>'+
+    '</div></div>'+
+    '<div style="font-size:11px;color:#8898aa;margin-top:8px;">Print &amp; attach to item</div>'+
+    '<div class="row" style="justify-content:center;margin-top:10px;">'+
+    '<button class="btn btn-blue btn-sm" onclick="doPrint()">Print Label</button>'+
+    '<button class="btn btn-orange btn-sm" onclick="S.addedItem=null;document.getElementById(\'af\').reset();render()">Add Another</button>'+
+    '</div>'+
+    '<div style="background:#f8fafc;border-radius:7px;padding:10px;margin-top:12px;text-align:left;font-size:11px;line-height:1.9;color:#8898aa;">'+
+    'Code: <strong style="color:#1a2744;">'+item.id+'</strong><br>'+
+    'Category: '+item.cat+'<br>'+
+    'Buy: TZS '+fmt(item.buyP)+' | Sell: TZS '+fmt(item.sellP)+'<br>'+
+    'Opening Stock: '+item.qty+' '+item.unit+'<br>'+
+    'Min Alert: '+item.minQ+' | Location: '+(item.loc||'-')+
+    '</div></div>':'')+'</div>';
+}
+
+function pgScan(){
+  var item=S.found;
+  return '<div style="display:grid;grid-template-columns:'+(item?'1fr 320px':'1fr')+';gap:14px;align-items:start;max-width:780px;margin:0 auto;">'+
+    '<div class="card"><div class="card-title">Scan Spare Part QR Code</div>'+
+    (!S.scanning&&!item?'<div style="text-align:center;padding:20px 0;">'+
+    '<div style="font-size:38px;margin-bottom:8px;">&#128247;</div>'+
+    '<div style="color:#8898aa;font-size:12px;margin-bottom:14px;">Scan QR label to record stock IN or OUT</div>'+
+    '<button class="btn btn-blue" onclick="startScan()">Start Camera</button>'+
+    '</div>':'')+
+    (S.scanning?'<div class="scan-box"><video id="sv" autoplay playsinline muted></video>'+
+    '<div class="scan-ol"><div class="scan-fr"></div></div></div>'+
+    '<canvas id="sc" class="sc"></canvas>'+
+    '<div style="text-align:center;font-size:11px;color:#8898aa;margin-top:6px;">Hold QR code steady in the frame</div>'+
+    '<div class="row" style="justify-content:center;margin-top:8px;"><button class="btn btn-red btn-sm" onclick="stopScan();S.scanning=false;render()">Stop</button></div>':'')+
+    '<div style="margin-top:10px;"><div class="fg"><label>Or Enter Code Manually</label>'+
+    '<div class="row"><input id="mid" type="text" placeholder="e.g. BO-001, BU-003, IN-002..." style="flex:1;padding:7px 10px;border:0.5px solid #dde3ea;border-radius:6px;font-size:12px;text-transform:uppercase;">'+
+    '<button class="btn btn-blue btn-sm" onclick="doManual()">Look Up</button></div></div>'+
+    '</div></div>'+
+    (item?'<div class="card">'+
+    '<div class="card-title">Item Found</div>'+
+    '<div class="found-card">'+
+    '<div class="fid">'+item.id+'</div>'+
+    '<div class="fnm">'+item.name+'</div>'+
+    '<div class="fdt">'+item.cat+' &nbsp;|&nbsp; Stock: '+item.qty+' '+item.unit+'</div>'+
+    '</div>'+
+    '<div class="type-tog">'+
+    '<button class="tt-btn tt-in'+(S.txnType==='IN'?' active':'')+'" onclick="S.txnType=\'IN\';render()">STOCK IN (Import)</button>'+
+    '<button class="tt-btn tt-out'+(S.txnType==='OUT'?' active':'')+'" onclick="S.txnType=\'OUT\';render()">STOCK OUT (Sale)</button>'+
+    '</div>'+
+    '<form id="tf" onsubmit="doTxn(event)">'+
+    '<div class="fg"><label>Quantity *</label><input name="qty" type="number" min="1"'+(S.txnType==='OUT'?' max="'+item.qty+'"':'')+' placeholder="Enter qty" required></div>'+
+    '<div class="fg"><label>'+(S.txnType==='IN'?'Import / Buy Price':'Selling Price')+' (TZS)</label>'+
+    '<input name="price" type="number" min="0" step="any" value="'+(S.txnType==='IN'?item.buyP:item.sellP)+'"></div>'+
+    '<div class="fg"><label>Reference / Notes</label><input name="notes" placeholder="Supplier, customer, invoice no..."></div>'+
+    '<div class="row" style="margin-top:8px;">'+
+    '<button type="submit" class="btn '+(S.txnType==='IN'?'btn-green':'btn-orange')+'">'+(S.txnType==='IN'?'Record Import (IN)':'Record Sale (OUT)')+'</button>'+
+    '<button type="button" class="btn btn-gray" onclick="S.found=null;S.txnType=\'IN\';render()">Cancel</button>'+
+    '</div></form></div>':'')+'</div>';
+}
+
+function pgHist(){
+  var fl=[].concat(S.txns).reverse();
+  if(S.hFilter!=='all')fl=fl.filter(function(t){return t.type===S.hFilter;});
+  if(S.hSearch)fl=fl.filter(function(t){return t.inm.toLowerCase().includes(S.hSearch.toLowerCase())||t.iid.toLowerCase().includes(S.hSearch.toLowerCase());});
+  var totIn=S.txns.filter(function(t){return t.type==='IN';}).reduce(function(s,t){return s+t.qty;},0);
+  var totOut=S.txns.filter(function(t){return t.type==='OUT';}).reduce(function(s,t){return s+t.qty;},0);
+  var rev=S.txns.filter(function(t){return t.type==='OUT';}).reduce(function(s,t){return s+(t.total||0);},0);
+  var cost=S.txns.filter(function(t){return t.type==='IN';}).reduce(function(s,t){return s+(t.total||0);},0);
+  return '<div class="grid4">'+
+    '<div class="stat gr"><div class="v">'+fmt(totIn)+'</div><div class="l">Units Imported</div></div>'+
+    '<div class="stat rd"><div class="v">'+fmt(totOut)+'</div><div class="l">Units Sold</div></div>'+
+    '<div class="stat bl"><div class="v">TZS '+fmt(rev)+'</div><div class="l">Total Revenue</div></div>'+
+    '<div class="stat am"><div class="v">TZS '+fmt(cost)+'</div><div class="l">Total Cost (IN)</div></div>'+
+    '</div><div class="card"><div class="card-title">Transaction History ('+fl.length+')</div>'+
+    '<div class="search-row">'+
+    '<input placeholder="Search item or code..." value="'+S.hSearch+'" oninput="S.hSearch=this.value;render()" style="flex:1;">'+
+    '<select onchange="S.hFilter=this.value;render()"><option value="all">All</option><option value="IN">IN (Imports)</option><option value="OUT">OUT (Sales)</option></select>'+
+    '<button class="btn btn-gray btn-sm" onclick="doCSV()">Export CSV</button>'+
+    '</div>'+
+    (fl.length===0?'<div class="empty">No transactions yet.</div>':
+    '<div style="overflow-x:auto;"><table class="tbl">'+
+    '<tr><th>TXN ID</th><th>Date</th><th>Code</th><th>Item</th><th>Type</th><th>Qty</th><th>Unit Price</th><th>Total</th><th>By</th><th>Notes</th></tr>'+
+    fl.slice(0,200).map(function(t){
+      return '<tr><td><code style="font-size:10px;">'+t.id+'</code></td>'+
+        '<td style="font-size:10px;color:#8898aa;white-space:nowrap;">'+fdt(t.ts)+'</td>'+
+        '<td><code>'+t.iid+'</code></td><td>'+t.inm+'</td>'+
+        '<td><span class="badge '+(t.type==='IN'?'b-in':'b-out')+'">'+t.type+'</span></td>'+
+        '<td>'+t.qty+'</td><td>TZS '+fmt(t.price)+'</td>'+
+        '<td>TZS '+fmt(t.total||0)+'</td>'+
+        '<td style="font-size:10px;color:#8898aa;">'+(t.user||'-')+'</td>'+
+        '<td style="color:#8898aa;">'+(t.notes||'-')+'</td></tr>';
+    }).join('')+'</table></div>')+'</div>';
+}
+
+/* ===== ADMIN PANEL ===== */
+function pgAdmin(){
+  var u=S.currentUser||{};
+  return '<div style="max-width:900px;">'+
+
+  /* Summary stats */
+  '<div class="grid4">'+
+  '<div class="stat rd"><div class="v" id="adm-ucnt">...</div><div class="l">Registered Users</div></div>'+
+  '<div class="stat bl"><div class="v">'+S.items.length+'</div><div class="l">Total SKUs</div></div>'+
+  '<div class="stat gr"><div class="v">'+S.txns.length+'</div><div class="l">Total Transactions</div></div>'+
+  '<div class="stat am"><div class="v" id="adm-admcnt">...</div><div class="l">Administrators</div></div>'+
+  '</div>'+
+
+  /* My Account */
+  '<div class="card">'+
+  '<div class="card-title" style="color:#e74c3c;">My Account Settings</div>'+
+  '<div class="grid2">'+
+  '<div>'+
+  '<div style="background:#f8fafc;border-radius:8px;padding:12px;border:0.5px solid #dde3ea;margin-bottom:12px;font-size:12px;line-height:2;">'+
+  '<strong>Name:</strong> '+u.firstName+' '+u.lastName+'<br>'+
+  '<strong>Email:</strong> '+u.email+'<br>'+
+  '<strong>Role:</strong> <span style="padding:2px 8px;border-radius:20px;background:#fde8e8;color:#c0392b;font-weight:700;font-size:10px;">'+u.role+'</span>'+
+  '</div>'+
+  '<div style="background:#fef3cd;border-radius:7px;padding:8px 10px;font-size:11px;color:#856404;border:0.5px solid #fde68a;">'+
+  '</div>'+
+  '</div>'+
+  '<div>'+
+  '<div class="fg"><label>Change Your Password</label><input id="adm-npw" type="password" placeholder="New password (min 6 chars)"></div>'+
+  '<div class="fg"><label>Confirm New Password</label><input id="adm-cpw" type="password" placeholder="Repeat new password"></div>'+
+  '<button class="btn btn-orange btn-sm" onclick="adminChangeMyPw()">Update My Password</button>'+
+  '</div>'+
+  '</div></div>'+
+
+  /* Add new user (admin only) */
+  '<div class="card">'+
+  '<div class="card-title" style="color:#e74c3c;">Create New User Account</div>'+
+  '<div class="grid2">'+
+  '<div class="fg"><label>First Name</label><input id="adm-fn" placeholder="First name"></div>'+
+  '<div class="fg"><label>Last Name</label><input id="adm-ln" placeholder="Last name"></div>'+
+  '<div class="fg"><label>Email</label><input id="adm-em" type="email" placeholder="user@email.com"></div>'+
+  '<div class="fg"><label>Role</label><select id="adm-role"><option value="Staff">Staff</option><option value="Supervisor">Supervisor</option></select></div>'+
+  '<div class="fg"><label>Password</label><input id="adm-pw" type="password" placeholder="Set initial password"></div>'+
+  '<div class="fg" style="justify-content:flex-end;padding-top:18px;"><button class="btn btn-blue" onclick="adminAddUser()">Create User</button></div>'+
+  '</div></div>'+
+
+  /* All users table */
+  '<div class="card">'+
+  '<div class="card-title" style="color:#e74c3c;">All Registered Users (Staff &amp; Supervisors)</div>'+
+  '<div id="adm-create-msg"></div>'+
+  '<div id="adm-users-table"><div class="empty" style="padding:24px;text-align:center;color:#8898aa;">Loading users...</div></div>'+
+  '</div>'+
+
+  /* ── Manage Items ── */
+  '<div class="card">'+
+  '<div class="card-title" style="color:#185fa5;">Manage Items</div>'+
+  '<div style="font-size:12px;color:#5a6475;margin-bottom:12px;line-height:1.7;">'+
+  'You currently have <strong>'+S.items.length+'</strong> item(s) in your inventory. '+
+  'Use the options below to remove individual items or clear all items at once and start fresh with your own stock.</div>'+
+  '<div id="adm-items-msg"></div>'+
+  '<div style="overflow-x:auto;max-height:320px;overflow-y:auto;">'+
+  '<table class="tbl" id="adm-items-tbl">'+
+  '<tr><th>Code</th><th>Item Name</th><th>Category</th><th>In Stock</th><th style="width:80px;"></th></tr>'+
+  renderItemsTable()+
+  '</table></div>'+
+  '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;">'+
+  '<button class="btn btn-red" onclick="adminClearAllItems()">&#128465; Remove ALL Items</button>'+
+  '<button class="btn btn-gray btn-sm" onclick="switchTab(\'add\')">+ Add New Item</button>'+
+  '</div>'+
+  '</div>'+
+
+  /* ── Manage Categories ── */
+  '<div class="card">'+
+  '<div class="card-title" style="color:#0f5e3c;">Manage Categories</div>'+
+  '<div style="font-size:12px;color:#5a6475;margin-bottom:12px;line-height:1.7;">Add your own categories or remove ones you don\'t need. Categories with items assigned cannot be deleted.</div>'+
+  '<div id="adm-cats-msg"></div>'+
+  '<div style="overflow-x:auto;margin-bottom:12px;">'+
+  '<table class="tbl">'+
+  '<tr><th>Icon</th><th>Category Name</th><th>Items</th><th>Colour</th><th style="width:80px;"></th></tr>'+
+  renderCatsTable()+
+  '</table></div>'+
+  '<div style="background:#f8fafc;border-radius:8px;padding:12px;border:0.5px solid #dde3ea;">'+
+  '<div style="font-size:11px;font-weight:700;color:#1a2744;margin-bottom:8px;">Add New Category</div>'+
+  '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;">'+
+  '<div class="fg" style="flex:1;min-width:160px;margin:0;"><label>Category Name</label><input id="new-cat-name" placeholder="e.g. Hydraulics, Tools..." style="padding:7px 10px;border:0.5px solid #dde3ea;border-radius:6px;font-size:13px;width:100%;"></div>'+
+  '<button class="btn btn-green" onclick="adminAddCat()">+ Add Category</button>'+
+  '</div></div>'+
+  '</div>'+
+
+  /* Danger Zone */
+  '<div class="card" style="border-color:#fca5a5;">'+
+  '<div class="card-title" style="color:#e74c3c;">System Controls</div>'+
+  '<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">'+
+  '<button class="btn btn-gray btn-sm" onclick="adminExportAll()">Export All Data (JSON)</button>'+
+  '<button class="btn btn-orange btn-sm" onclick="adminClearTxns()">Clear All Transactions</button>'+
+  '<button class="btn btn-red btn-sm" onclick="adminResetInventory()">Reset Inventory Quantities to 0</button>'+
+  '</div>'+
+  '<div style="margin-top:10px;font-size:11px;color:#8898aa;">These actions cannot be undone. Only Administrators can perform them.</div>'+
+  '</div>'+
+
+  '</div>';
+}
+
+function adminLoadUsers(){
+  /* Show loading state first */
+  var el=document.getElementById('adm-users-table');
+  if(el)el.innerHTML='<div style="padding:16px;text-align:center;color:#8898aa;font-size:12px;">Loading users...</div>';
+  
+  var users=getUsers();
+  
+  var ucnt=document.getElementById('adm-ucnt');
+  var admcnt=document.getElementById('adm-admcnt');
+  el=document.getElementById('adm-users-table');
+  if(ucnt)ucnt.textContent=users.length+1;
+  if(admcnt)admcnt.textContent='1';
+  if(!el)return;
+  if(users.length===0){el.innerHTML='<div class="empty" style="padding:24px;text-align:center;color:#8898aa;">No staff or supervisor accounts yet.<br>Use the form above to create the first one.</div>';return;}
+  el.innerHTML='<div style="overflow-x:auto;"><table class="tbl">'+
+    '<tr><th>ID</th><th>Name</th><th>Email</th><th>Role</th><th>Registered</th><th>Actions</th></tr>'+
+    users.map(function(u){
+      var isMe=u.id===(S.currentUser&&S.currentUser.id);
+      var isLockedAdmin=u.email===ADMIN_EMAIL;
+      var roleColor=u.role==='Administrator'?'#e74c3c':u.role==='Supervisor'?'#185fa5':'#1a7a45';
+      var roleBg=u.role==='Administrator'?'#fde8e8':u.role==='Supervisor'?'#ddeeff':'#d4f5e3';
+      return '<tr style="'+(isMe?'background:#fffbeb;':'')+(isLockedAdmin?'background:#fff5f5;':'')+'">'+
+        '<td><code style="font-size:10px;">'+u.id+'</code>'+(isMe?' <span style="font-size:9px;background:#fef3cd;color:#b7791f;padding:1px 5px;border-radius:10px;font-weight:700;">YOU</span>':'')+(isLockedAdmin?' <span style="font-size:9px;background:#fde8e8;color:#c0392b;padding:1px 5px;border-radius:10px;font-weight:700;">OWNER</span>':'')+'</td>'+
+        '<td><strong>'+u.firstName+' '+u.lastName+'</strong></td>'+
+        '<td>'+u.email+'</td>'+
+        '<td><span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:'+roleBg+';color:'+roleColor+';">'+u.role+'</span></td>'+
+        '<td style="font-size:10px;color:#8898aa;">'+(u.created?u.created.slice(0,10):'-')+'</td>'+
+        '<td>'+
+          (isLockedAdmin
+            /* Owner row — only allow password change, no role or delete */
+            ?'<span style="font-size:10px;color:#8898aa;font-style:italic;">System owner — use Account Settings to change password</span>'
+            :'<div style="display:flex;gap:5px;flex-wrap:wrap;">'+
+              '<select id="role-'+u.id+'" style="padding:4px 6px;border:0.5px solid #dde3ea;border-radius:5px;font-size:11px;background:#fff;">'+
+              ['Staff','Supervisor'].map(function(r){return '<option'+(u.role===r?' selected':'')+'>'+r+'</option>';}).join('')+
+              '</select>'+
+              '<button class="btn btn-blue btn-sm" style="font-size:10px;" onclick="adminChangeRole(\''+u.id+'\')">Save Role</button>'+
+              '<button class="btn btn-orange btn-sm" style="font-size:10px;" onclick="adminResetPw(\''+u.id+'\',\''+u.firstName+'\')">Reset PW</button>'+
+              '<button class="btn btn-red btn-sm" style="font-size:10px;" onclick="adminDeleteUser(\''+u.id+'\',\''+u.firstName+' '+u.lastName+'\')">Delete</button>'+
+              '</div>')+
+        '</td></tr>';
+    }).join('')+'</table></div>';
+}
+
+function adminChangeRole(uid){
+  var sel=document.getElementById('role-'+uid);
+  if(!sel)return;
+  var newRole=sel.value;
+  var users=getUsers();
+  var user=users.find(function(u){return u.id===uid;});
+  if(!user)return;
+  /* Protect locked admin */
+  if(user.email===ADMIN_EMAIL){return showMsg('err','The system owner role cannot be changed.');}
+  /* Block assigning Administrator via this route */
+  if(newRole==='Administrator'){return showMsg('err','Administrator role cannot be assigned here.');}
+  user.role=newRole;
+  saveUsers(users);
+  showMsg('ok','Role updated to '+newRole+' for '+user.firstName+'.');
+  adminLoadUsers();
+}
+
+function adminResetPw(uid,name){
+  var np=prompt('Enter new password for '+name+' (min 6 chars):');
+  if(!np)return;
+  if(np.length<6){return showMsg('err','Password must be at least 6 characters.');}
+  var users=getUsers();
+  var user=users.find(function(u){return u.id===uid;});
+  if(!user)return;
+  user.password=np;
+  saveUsers(users);
+  showMsg('ok','Password reset for '+name+'. New password: '+np);
+}
+
+function adminChangeMyPw(){
+  var np=(document.getElementById('adm-npw')||{}).value||'';
+  var cp=(document.getElementById('adm-cpw')||{}).value||'';
+  if(!np||!cp)return showMsg('err','Please fill in both password fields.');
+  if(np.length<6)return showMsg('err','Password must be at least 6 characters.');
+  if(np!==cp)return showMsg('err','Passwords do not match.');
+  pvtSet('enm:adm-pw',np);
+  showMsg('ok','Admin password updated successfully.');
+  var n=document.getElementById('adm-npw');var c=document.getElementById('adm-cpw');
+  if(n)n.value='';if(c)c.value='';
+}
+
+function adminAddUser(){
+  var fn=(document.getElementById('adm-fn')||{value:''}).value.trim();
+  var ln=(document.getElementById('adm-ln')||{value:''}).value.trim();
+  var em=((document.getElementById('adm-em')||{value:''}).value||'').toLowerCase().trim();
+  var role=(document.getElementById('adm-role')||{value:'Staff'}).value||'Staff';
+  var pw=(document.getElementById('adm-pw')||{value:''}).value;
+
+  /* Validate */
+  if(!fn)return admMsg('Please enter the first name.','err');
+  if(!ln)return admMsg('Please enter the last name.','err');
+  if(!em)return admMsg('Please enter an email address.','err');
+  if(!validEmail(em))return admMsg('Invalid email format (e.g. john@gmail.com).','err');
+  if(em===ADMIN_EMAIL)return admMsg('That email is reserved for the system owner.','err');
+  if(!pw)return admMsg('Please set a password.','err');
+  if(pw.length<6)return admMsg('Password must be at least 6 characters.','err');
+
+  var users=getUsers();
+  if(users.find(function(u){return u.email===em;})){
+    return admMsg('That email is already registered in the system.','err');
+  }
+
+  var newUser={
+    id:'USR-'+Date.now(),
+    firstName:fn,lastName:ln,
+    email:em,password:pw,role:role,
+    created:new Date().toISOString()
+  };
+  users.push(newUser);
+  var savedOk=saveUsers(users);
+  if(!savedOk)return admMsg('Save failed — storage error. Please try again.','err');
+
+  /* Clear the form */
+  ['adm-fn','adm-ln','adm-em','adm-pw'].forEach(function(id){
+    var el=document.getElementById(id);if(el)el.value='';
+  });
+  var rs=document.getElementById('adm-role');if(rs)rs.value='Staff';
+
+  /* Show success */
+  admMsg('✓ Account created for '+fn+' '+ln+' ('+role+'). Login: '+em+' / Password: '+pw,'ok');
+  adminLoadUsers();
+}
+
+function admMsg(msg,type){
+  var el=document.getElementById('adm-create-msg');
+  if(!el)return;
+  el.innerHTML='<div class="alert alert-'+(type==='ok'?'ok':'err')+'" style="margin-bottom:10px;">'+msg+'</div>';
+  if(type==='ok')setTimeout(function(){if(el)el.innerHTML='';},8000);
+}
+
+function adminDeleteUser(uid,name){
+  if(!confirm('Delete user '+name+'? This cannot be undone.'))return;
+  var users=getUsers();
+  var target=users.find(function(u){return u.id===uid;});
+  if(target&&target.email===ADMIN_EMAIL){return showMsg('err','The system owner account cannot be deleted.');}
+  users=users.filter(function(u){return u.id!==uid;});
+  saveUsers(users);
+  showMsg('ok',name+' has been deleted.');
+  adminLoadUsers();
+}
+
+function adminExportAll(){
+  var users=getUsers();
+  var data={exportDate:new Date().toISOString(),users:users.map(function(u){return{id:u.id,name:u.firstName+' '+u.lastName,email:u.email,role:u.role};}),items:S.items,transactions:S.txns};
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+  a.download='enm_full_export_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+
+function adminClearTxns(){
+  if(!confirm('Clear ALL transaction history? Inventory quantities will remain unchanged. This cannot be undone.'))return;
+  S.txns=[];
+  saveTxns();
+  showMsg('ok','All transaction history cleared.');
+  render();
+}
+
+function adminResetInventory(){
+  if(!confirm('Reset ALL inventory quantities to 0? Transactions will remain. This cannot be undone.'))return;
+  S.items.forEach(function(i){i.qty=0;});
+  saveItems();
+  showMsg('ok','All inventory quantities have been reset to 0.');
+  render();
+}
+
+/* ===== LIVE FIELD VALIDATION ===== */
+/* gv now aliased to fv */
+function setHint(hid,cls,msg){var el=document.getElementById('h-'+hid);if(el){el.className='hint '+cls;el.textContent=msg;}}
+function setInpState(id,state){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.classList.remove('valid','invalid');
+  if(state==='ok')el.classList.add('valid');
+  else if(state==='err')el.classList.add('invalid');
+}
+function liveCheck(id,field){
+  var val=fv(id).trim();
+  if(field==='fn'){
+    if(!val){setInpState(id,'');setHint('fn','info','');}
+    else if(val.length<2){setInpState(id,'err');setHint('fn','err','Must be at least 2 characters');}
+    else{setInpState(id,'ok');setHint('fn','ok','Looks good');}
+  } else if(field==='ln'){
+    if(!val){setInpState(id,'');setHint('ln','info','');}
+    else if(val.length<2){setInpState(id,'err');setHint('ln','err','Must be at least 2 characters');}
+    else{setInpState(id,'ok');setHint('ln','ok','Looks good');}
+  } else if(field==='em'){
+    if(!val){setInpState(id,'');setHint('em','info','');}
+    else if(val===ADMIN_EMAIL){setInpState(id,'err');setHint('em','err','This email is reserved');}
+    else if(!validEmail(val)){setInpState(id,'err');setHint('em','err','Enter a valid email like name@domain.com');}
+    else{setInpState(id,'ok');setHint('em','ok','Valid email address');}
+  } else if(field==='pw'){
+    if(!val){setInpState(id,'');setHint('pw','info','');}
+    else if(val.length<6){setInpState(id,'err');setHint('pw','err','Minimum 6 characters ('+val.length+'/6)');}
+    else{setInpState(id,'ok');setHint('pw','ok','Strong enough');}
+    /* Re-check confirm */
+    var cpv=fv('reg-cpw');
+    if(cpv){liveCheck('reg-cpw','cpw');}
+  } else if(field==='cpw'){
+    var pw=fv('reg-pw');
+    if(!val){setInpState(id,'');setHint('cpw','info','');}
+    else if(val!==pw){setInpState(id,'err');setHint('cpw','err','Passwords do not match');}
+    else{setInpState(id,'ok');setHint('cpw','ok','Passwords match');}
+  }
+}
+
+
+/* ===== REPORTS & EXPORTS MODULE ===== */
+
+/* ---- helpers ---- */
+function rptFmt(n){return Math.round(Number(n)||0).toLocaleString();}
+function rptDate(iso){return iso?iso.slice(0,10):'';}
+function rptMonth(iso){return iso?iso.slice(0,7):'';}
+
+/* Filter transactions by date range and category */
+function rptTxns(){
+  var txns=S.txns;
+  if(S.rptFrom) txns=txns.filter(function(t){return t.ts>=S.rptFrom;});
+  if(S.rptTo)   txns=txns.filter(function(t){return t.ts<=S.rptTo+'T23:59:59';});
+  if(S.rptCat!=='all'){
+    var catIds=S.items.filter(function(i){return i.cat===S.rptCat;}).map(function(i){return i.id;});
+    txns=txns.filter(function(t){return catIds.indexOf(t.iid)!==-1;});
+  }
+  return txns;
+}
+function rptItems(){
+  if(S.rptCat==='all') return S.items;
+  return S.items.filter(function(i){return i.cat===S.rptCat;});
+}
+
+/* ---- main page ---- */
+function pgReports(){
+  var sub=S.rptTab||'summary';
+  var filterBar=
+    '<div class="rpt-filters">'+
+    '<label>From:</label><input type="date" value="'+S.rptFrom+'" onchange="S.rptFrom=this.value;render()">'+
+    '<label>To:</label><input type="date" value="'+S.rptTo+'" onchange="S.rptTo=this.value;render()">'+
+    '<label>Category:</label>'+
+    '<select onchange="S.rptCat=this.value;render()">'+
+    '<option value="all">All Categories</option>'+
+    Object.keys(CATS).map(function(k){return '<option value="'+k+'"'+(S.rptCat===k?' selected':'')+'>'+k+'</option>';}).join('')+
+    '</select>'+
+    '<button class="btn btn-gray btn-sm" onclick="S.rptFrom=\'\';S.rptTo=\'\';S.rptCat=\'all\';render()" style="font-size:11px;">Clear Filters</button>'+
+    '</div>';
+
+  var tabs=
+    '<div class="rpt-tabs">'+
+    [{id:'summary',l:'Summary'},{id:'sales',l:'Sales Report'},{id:'stock',l:'Stock Report'},{id:'profit',l:'Profit & Loss'},{id:'topitems',l:'Top Items'},{id:'monthly',l:'Monthly Trend'}]
+    .map(function(t){return '<button class="rpt-tab'+(sub===t.id?' active':'')+'" onclick="S.rptTab=\''+t.id+'\';render()">'+t.l+'</button>';}).join('')+
+    '</div>';
+
+  var exportBtns=
+    '<div class="export-btns">'+
+    '<button class="btn btn-blue" onclick="rptExportCSV()">&#128196; Export CSV</button>'+
+    '<button class="btn btn-green" onclick="rptPrint()">&#128438; Print Report</button>'+
+    '<button class="btn btn-orange" onclick="rptExportFullJSON()">&#128230; Full Data Backup</button>'+
+    '</div>';
+
+  var content='';
+  if(sub==='summary') content=rptSummary();
+  else if(sub==='sales') content=rptSales();
+  else if(sub==='stock') content=rptStock();
+  else if(sub==='profit') content=rptProfit();
+  else if(sub==='topitems') content=rptTopItems();
+  else if(sub==='monthly') content=rptMonthly();
+
+  return '<div id="rpt-root">'+filterBar+tabs+exportBtns+content+'</div>';
+}
+
+/* ─── SUMMARY REPORT ─────────────────────────────────── */
+function rptSummary(){
+  var txns=rptTxns();
+  var items=rptItems();
+  var inTxns=txns.filter(function(t){return t.type==='IN';});
+  var outTxns=txns.filter(function(t){return t.type==='OUT';});
+  var revenue=outTxns.reduce(function(s,t){return s+(t.total||0);},0);
+  var cost=inTxns.reduce(function(s,t){return s+(t.total||0);},0);
+  var profit=revenue-cost;
+  var stockVal=items.reduce(function(s,i){return s+i.qty*i.sellP;},0);
+  var lowStock=items.filter(function(i){return i.qty>0&&i.qty<=i.minQ;});
+  var outOfStock=items.filter(function(i){return i.qty===0;});
+  var totalUnitsIn=inTxns.reduce(function(s,t){return s+t.qty;},0);
+  var totalUnitsOut=outTxns.reduce(function(s,t){return s+t.qty;},0);
+
+  var kpis=
+    '<div class="rpt-grid">'+
+    '<div class="rpt-kpi"><div class="rk-icon">&#128200;</div><div class="rk-val">TZS '+rptFmt(revenue)+'</div><div class="rk-lbl">Total Revenue</div><div class="rk-sub">'+outTxns.length+' sales</div></div>'+
+    '<div class="rpt-kpi"><div class="rk-icon">&#128181;</div><div class="rk-val">TZS '+rptFmt(cost)+'</div><div class="rk-lbl">Total Cost (Imports)</div><div class="rk-sub">'+inTxns.length+' imports</div></div>'+
+    '<div class="rpt-kpi"><div class="rk-icon">&#128176;</div><div class="rk-val '+(profit>=0?'profit-pos':'profit-neg')+'">TZS '+rptFmt(Math.abs(profit))+'</div><div class="rk-lbl">'+(profit>=0?'Gross Profit':'Gross Loss')+'</div><div class="rk-sub '+(profit>=0?'':'neg')+'">'+(profit>=0?'+':'-')+rptFmt(Math.abs(revenue>0?(profit/revenue*100):0))+'% margin</div></div>'+
+    '<div class="rpt-kpi"><div class="rk-icon">&#128230;</div><div class="rk-val">TZS '+rptFmt(stockVal)+'</div><div class="rk-lbl">Current Stock Value</div><div class="rk-sub">'+items.length+' SKUs</div></div>'+
+    '</div>'+
+    '<div class="rpt-grid">'+
+    '<div class="rpt-kpi"><div class="rk-icon">&#128077;</div><div class="rk-val">'+rptFmt(totalUnitsIn)+'</div><div class="rk-lbl">Units Imported</div></div>'+
+    '<div class="rpt-kpi"><div class="rk-icon">&#128078;</div><div class="rk-val">'+rptFmt(totalUnitsOut)+'</div><div class="rk-lbl">Units Sold</div></div>'+
+    '<div class="rpt-kpi"><div class="rk-icon">&#9888;</div><div class="rk-val" style="color:#b7791f;">'+lowStock.length+'</div><div class="rk-lbl">Low Stock Items</div></div>'+
+    '<div class="rpt-kpi"><div class="rk-icon">&#128683;</div><div class="rk-val" style="color:#c0392b;">'+outOfStock.length+'</div><div class="rk-lbl">Out of Stock</div></div>'+
+    '</div>';
+
+  /* Category breakdown bars */
+  var catRows=Object.keys(CATS).map(function(cat){
+    var ci=items.filter(function(i){return i.cat===cat;});
+    var catOut=outTxns.filter(function(t){
+      var it=S.items.find(function(i){return i.id===t.iid;});
+      return it&&it.cat===cat;
+    });
+    var catRev=catOut.reduce(function(s,t){return s+(t.total||0);},0);
+    return {cat,cnt:ci.length,qty:ci.reduce(function(s,i){return s+i.qty;},0),rev:catRev,cs:catStyle(cat)};
+  }).filter(function(x){return x.cnt>0;}).sort(function(a,b){return b.rev-a.rev;});
+  var maxRev=Math.max.apply(null,catRows.map(function(x){return x.rev;}))||1;
+
+  var catBreakdown='<div class="card"><div class="card-title">Revenue by Category</div>'+
+    catRows.map(function(x){
+      var pct=Math.round(x.rev/maxRev*100);
+      return '<div class="rpt-bar-wrap">'+
+        '<div class="rpt-bar-label"><span style="font-weight:700;color:'+x.cs.color+';">'+x.cat+'</span><span>TZS '+rptFmt(x.rev)+'</span></div>'+
+        '<div class="rpt-bar-bg"><div class="rpt-bar-fill" style="width:'+pct+'%;background:'+x.cs.color+';"></div></div>'+
+        '</div>';
+    }).join('')+'</div>';
+
+  return kpis+catBreakdown;
+}
+
+/* ─── SALES REPORT ───────────────────────────────────── */
+function rptSales(){
+  var txns=rptTxns().filter(function(t){return t.type==='OUT';}).reverse();
+  var total=txns.reduce(function(s,t){return s+(t.total||0);},0);
+  if(!txns.length) return '<div class="card"><div class="empty" style="padding:30px;text-align:center;color:#8898aa;">No sales in selected range.</div></div>';
+  return '<div class="card">'+
+    '<div class="rpt-section-title">Sales Transactions ('+txns.length+')<span style="color:#1a7a45;font-size:13px;">Total: TZS '+rptFmt(total)+'</span></div>'+
+    '<div style="overflow-x:auto;"><table class="tbl">'+
+    '<tr><th>Date</th><th>TXN ID</th><th>Code</th><th>Item</th><th>Category</th><th>Qty</th><th>Unit Price</th><th>Total</th><th>By</th><th>Notes</th></tr>'+
+    txns.map(function(t){
+      var it=S.items.find(function(i){return i.id===t.iid;})||{cat:'—'};
+      var cs=catStyle(it.cat);
+      return '<tr>'+
+        '<td style="white-space:nowrap;font-size:11px;">'+rptDate(t.ts)+'</td>'+
+        '<td><code style="font-size:10px;">'+t.id+'</code></td>'+
+        '<td><code>'+t.iid+'</code></td>'+
+        '<td><strong>'+t.inm+'</strong></td>'+
+        '<td><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:'+cs.bg+';color:'+cs.color+';">'+it.cat+'</span></td>'+
+        '<td>'+t.qty+'</td>'+
+        '<td>TZS '+rptFmt(t.price)+'</td>'+
+        '<td><strong>TZS '+rptFmt(t.total||0)+'</strong></td>'+
+        '<td style="font-size:11px;color:#8898aa;">'+(t.user||'—')+'</td>'+
+        '<td style="color:#8898aa;">'+(t.notes||'—')+'</td>'+
+        '</tr>';
+    }).join('')+
+    '<tr style="background:#f0fdf4;"><td colspan="7" style="font-weight:700;text-align:right;">TOTAL REVENUE</td><td><strong style="color:#1a7a45;">TZS '+rptFmt(total)+'</strong></td><td colspan="2"></td></tr>'+
+    '</table></div></div>';
+}
+
+/* ─── STOCK REPORT ───────────────────────────────────── */
+function rptStock(){
+  var items=rptItems().slice().sort(function(a,b){return a.cat.localeCompare(b.cat)||a.name.localeCompare(b.name);});
+  var totalVal=items.reduce(function(s,i){return s+i.qty*i.sellP;},0);
+  var totalCostVal=items.reduce(function(s,i){return s+i.qty*i.buyP;},0);
+  if(!items.length) return '<div class="card"><div class="empty" style="padding:30px;text-align:center;">No items found.</div></div>';
+  return '<div class="card">'+
+    '<div class="rpt-section-title">Current Stock Status ('+items.length+' items)<span style="font-size:12px;color:#185fa5;">Stock Value: TZS '+rptFmt(totalVal)+'</span></div>'+
+    '<div style="overflow-x:auto;"><table class="tbl">'+
+    '<tr><th>Code</th><th>Item Name</th><th>Category</th><th>In Stock</th><th>Unit</th><th>Buy Price</th><th>Sell Price</th><th>Stock Cost</th><th>Stock Value</th><th>Min Level</th><th>Location</th><th>Status</th></tr>'+
+    items.map(function(i){
+      var cs=catStyle(i.cat);
+      var st=i.qty===0?'b-none':i.qty<=i.minQ?'b-low':'b-ok';
+      var stl=i.qty===0?'OUT OF STOCK':i.qty<=i.minQ?'LOW':'OK';
+      return '<tr>'+
+        '<td><code>'+i.id+'</code></td>'+
+        '<td><strong>'+i.name+'</strong></td>'+
+        '<td><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:'+cs.bg+';color:'+cs.color+';">'+i.cat+'</span></td>'+
+        '<td><strong style="color:'+(i.qty===0?'#c0392b':i.qty<=i.minQ?'#b7791f':'#1a7a45')+'">'+i.qty+'</strong></td>'+
+        '<td>'+i.unit+'</td>'+
+        '<td>TZS '+rptFmt(i.buyP)+'</td>'+
+        '<td>TZS '+rptFmt(i.sellP)+'</td>'+
+        '<td>TZS '+rptFmt(i.qty*i.buyP)+'</td>'+
+        '<td><strong>TZS '+rptFmt(i.qty*i.sellP)+'</strong></td>'+
+        '<td>'+i.minQ+'</td>'+
+        '<td>'+(i.loc||'—')+'</td>'+
+        '<td><span class="badge '+st+'">'+stl+'</span></td>'+
+        '</tr>';
+    }).join('')+
+    '<tr style="background:#f0f4f8;font-weight:700;">'+
+    '<td colspan="7" style="text-align:right;">TOTALS</td>'+
+    '<td>TZS '+rptFmt(totalCostVal)+'</td>'+
+    '<td><strong style="color:#185fa5;">TZS '+rptFmt(totalVal)+'</strong></td>'+
+    '<td colspan="3"></td></tr>'+
+    '</table></div></div>';
+}
+
+/* ─── PROFIT & LOSS ──────────────────────────────────── */
+function rptProfit(){
+  var txns=rptTxns();
+  var inTxns=txns.filter(function(t){return t.type==='IN';});
+  var outTxns=txns.filter(function(t){return t.type==='OUT';});
+  var revenue=outTxns.reduce(function(s,t){return s+(t.total||0);},0);
+  var cost=inTxns.reduce(function(s,t){return s+(t.total||0);},0);
+  var profit=revenue-cost;
+  var margin=revenue>0?Math.round(profit/revenue*1000)/10:0;
+
+  /* Per-item profit analysis */
+  var itemMap={};
+  outTxns.forEach(function(t){
+    var it=S.items.find(function(i){return i.id===t.iid;});
+    if(!it)return;
+    if(!itemMap[t.iid]) itemMap[t.iid]={item:it,units:0,revenue:0,cost:0};
+    itemMap[t.iid].units+=t.qty;
+    itemMap[t.iid].revenue+=(t.total||0);
+    itemMap[t.iid].cost+=t.qty*it.buyP;
+  });
+  var rows=Object.values(itemMap).map(function(x){
+    x.profit=x.revenue-x.cost;
+    x.margin=x.revenue>0?Math.round(x.profit/x.revenue*1000)/10:0;
+    return x;
+  }).sort(function(a,b){return b.profit-a.profit;});
+
+  var summary='<div class="card">'+
+    '<div class="rpt-section-title">Profit & Loss Summary</div>'+
+    '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;">'+
+    '<div style="background:#f0fdf4;border-radius:8px;padding:14px;border:0.5px solid #a7f3d0;">'+
+    '<div style="font-size:11px;color:#1a7a45;font-weight:700;margin-bottom:4px;">TOTAL REVENUE</div>'+
+    '<div style="font-size:20px;font-weight:700;color:#1a7a45;">TZS '+rptFmt(revenue)+'</div>'+
+    '<div style="font-size:11px;color:#8898aa;margin-top:2px;">'+outTxns.length+' transactions</div>'+
+    '</div>'+
+    '<div style="background:#fff9f9;border-radius:8px;padding:14px;border:0.5px solid #fca5a5;">'+
+    '<div style="font-size:11px;color:#c0392b;font-weight:700;margin-bottom:4px;">TOTAL COST</div>'+
+    '<div style="font-size:20px;font-weight:700;color:#c0392b;">TZS '+rptFmt(cost)+'</div>'+
+    '<div style="font-size:11px;color:#8898aa;margin-top:2px;">'+inTxns.length+' imports</div>'+
+    '</div>'+
+    '<div style="background:'+(profit>=0?'#f0fdf4':'#fff9f9')+';border-radius:8px;padding:14px;border:0.5px solid '+(profit>=0?'#a7f3d0':'#fca5a5')+';">'+
+    '<div style="font-size:11px;color:'+(profit>=0?'#1a7a45':'#c0392b')+';font-weight:700;margin-bottom:4px;">'+(profit>=0?'GROSS PROFIT':'GROSS LOSS')+'</div>'+
+    '<div style="font-size:20px;font-weight:700;color:'+(profit>=0?'#1a7a45':'#c0392b')+';">TZS '+rptFmt(Math.abs(profit))+'</div>'+
+    '<div style="font-size:11px;color:#8898aa;margin-top:2px;">Margin: '+margin+'%</div>'+
+    '</div>'+
+    '</div></div>';
+
+  var detail=rows.length?'<div class="card">'+
+    '<div class="rpt-section-title">Per-Item Profit Analysis</div>'+
+    '<div style="overflow-x:auto;"><table class="tbl">'+
+    '<tr><th>Code</th><th>Item</th><th>Category</th><th>Units Sold</th><th>Revenue</th><th>Cost</th><th>Profit</th><th>Margin</th></tr>'+
+    rows.map(function(x){
+      var cs=catStyle(x.item.cat);
+      return '<tr>'+
+        '<td><code>'+x.item.id+'</code></td>'+
+        '<td><strong>'+x.item.name+'</strong></td>'+
+        '<td><span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:'+cs.bg+';color:'+cs.color+';">'+x.item.cat+'</span></td>'+
+        '<td>'+x.units+'</td>'+
+        '<td>TZS '+rptFmt(x.revenue)+'</td>'+
+        '<td>TZS '+rptFmt(x.cost)+'</td>'+
+        '<td class="'+(x.profit>=0?'profit-pos':'profit-neg')+'">TZS '+rptFmt(Math.abs(x.profit))+'</td>'+
+        '<td class="'+(x.margin>=0?'profit-pos':'profit-neg')+'">'+x.margin+'%</td>'+
+        '</tr>';
+    }).join('')+
+    '</table></div></div>':
+    '<div class="card"><div class="empty" style="padding:24px;text-align:center;">No sales data yet for profit analysis.</div></div>';
+
+  return summary+detail;
+}
+
+/* ─── TOP ITEMS ──────────────────────────────────────── */
+function rptTopItems(){
+  var txns=rptTxns();
+  var outTxns=txns.filter(function(t){return t.type==='OUT';});
+  var inTxns=txns.filter(function(t){return t.type==='IN';});
+
+  /* Top by revenue */
+  var revMap={};
+  outTxns.forEach(function(t){
+    if(!revMap[t.iid]) revMap[t.iid]={id:t.iid,name:t.inm,units:0,revenue:0};
+    revMap[t.iid].units+=t.qty;
+    revMap[t.iid].revenue+=(t.total||0);
+  });
+  var topRev=Object.values(revMap).sort(function(a,b){return b.revenue-a.revenue;}).slice(0,10);
+
+  /* Top by movement (units imported) */
+  var movMap={};
+  inTxns.forEach(function(t){
+    if(!movMap[t.iid]) movMap[t.iid]={id:t.iid,name:t.inm,units:0};
+    movMap[t.iid].units+=t.qty;
+  });
+  var topMov=Object.values(movMap).sort(function(a,b){return b.units-a.units;}).slice(0,10);
+  var maxRev=topRev.length?topRev[0].revenue:1;
+  var maxMov=topMov.length?topMov[0].units:1;
+
+  var revCard='<div class="card">'+
+    '<div class="rpt-section-title">Top 10 Items by Revenue</div>'+
+    (topRev.length?topRev.map(function(x,i){
+      var it=S.items.find(function(ii){return ii.id===x.id;})||{cat:'—'};
+      var cs=catStyle(it.cat);
+      var pct=Math.round(x.revenue/maxRev*100);
+      return '<div class="rpt-bar-wrap" style="margin-bottom:8px;">'+
+        '<div class="rpt-bar-label">'+
+        '<span><strong style="color:#1a2744;">'+(i+1)+'. '+x.name+'</strong> <span style="font-size:10px;padding:1px 6px;border-radius:10px;background:'+cs.bg+';color:'+cs.color+';">'+it.cat+'</span></span>'+
+        '<span style="font-weight:700;color:#1a7a45;">TZS '+rptFmt(x.revenue)+' &nbsp;<span style="color:#8898aa;font-weight:400;">('+x.units+' units)</span></span>'+
+        '</div>'+
+        '<div class="rpt-bar-bg"><div class="rpt-bar-fill" style="width:'+pct+'%;background:'+cs.color+';"></div></div>'+
+        '</div>';
+    }).join(''):'<div class="empty" style="padding:20px;text-align:center;">No sales data yet.</div>')+
+    '</div>';
+
+  var movCard='<div class="card">'+
+    '<div class="rpt-section-title">Top 10 Most Imported Items</div>'+
+    (topMov.length?topMov.map(function(x,i){
+      var it=S.items.find(function(ii){return ii.id===x.id;})||{cat:'—'};
+      var cs=catStyle(it.cat);
+      var pct=Math.round(x.units/maxMov*100);
+      return '<div class="rpt-bar-wrap" style="margin-bottom:8px;">'+
+        '<div class="rpt-bar-label">'+
+        '<span><strong style="color:#1a2744;">'+(i+1)+'. '+x.name+'</strong> <span style="font-size:10px;padding:1px 6px;border-radius:10px;background:'+cs.bg+';color:'+cs.color+';">'+it.cat+'</span></span>'+
+        '<span style="font-weight:700;color:#185fa5;">'+x.units+' units imported</span>'+
+        '</div>'+
+        '<div class="rpt-bar-bg"><div class="rpt-bar-fill" style="width:'+pct+'%;background:'+cs.color+';"></div></div>'+
+        '</div>';
+    }).join(''):'<div class="empty" style="padding:20px;text-align:center;">No import data yet.</div>')+
+    '</div>';
+
+  return revCard+movCard;
+}
+
+/* ─── MONTHLY TREND ──────────────────────────────────── */
+function rptMonthly(){
+  var txns=rptTxns();
+  /* Group by month */
+  var months={};
+  txns.forEach(function(t){
+    var m=t.ts?t.ts.slice(0,7):'unknown';
+    if(!months[m]) months[m]={month:m,revenue:0,cost:0,inQty:0,outQty:0,inCount:0,outCount:0};
+    if(t.type==='OUT'){months[m].revenue+=(t.total||0);months[m].outQty+=t.qty;months[m].outCount++;}
+    else{months[m].cost+=(t.total||0);months[m].inQty+=t.qty;months[m].inCount++;}
+  });
+  var rows=Object.values(months).sort(function(a,b){return a.month<b.month?-1:1;});
+  if(!rows.length) return '<div class="card"><div class="empty" style="padding:30px;text-align:center;">No transaction data for trend analysis.</div></div>';
+
+  var maxRev=Math.max.apply(null,rows.map(function(r){return r.revenue;}))||1;
+  var cumProfit=0;
+
+  var trendBars='<div class="card">'+
+    '<div class="rpt-section-title">Monthly Revenue Trend</div>'+
+    rows.map(function(r){
+      var pct=Math.round(r.revenue/maxRev*100);
+      return '<div class="rpt-bar-wrap" style="margin-bottom:10px;">'+
+        '<div class="rpt-bar-label"><span style="font-weight:700;">'+r.month+'</span><span style="color:#1a7a45;font-weight:700;">TZS '+rptFmt(r.revenue)+'</span></div>'+
+        '<div class="rpt-bar-bg" style="height:18px;"><div class="rpt-bar-fill" style="width:'+pct+'%;background:#1a2744;"></div></div>'+
+        '</div>';
+    }).join('')+'</div>';
+
+  var monthlyTable='<div class="card">'+
+    '<div class="rpt-section-title">Monthly Summary Table</div>'+
+    '<div style="overflow-x:auto;"><table class="tbl">'+
+    '<tr><th>Month</th><th>Revenue</th><th>Cost</th><th>Profit</th><th>Margin</th><th>Units In</th><th>Units Out</th><th>Transactions</th></tr>'+
+    rows.map(function(r){
+      var p=r.revenue-r.cost;
+      cumProfit+=p;
+      var m=r.revenue>0?Math.round(p/r.revenue*1000)/10:0;
+      return '<tr>'+
+        '<td><strong>'+r.month+'</strong></td>'+
+        '<td style="color:#1a7a45;">TZS '+rptFmt(r.revenue)+'</td>'+
+        '<td style="color:#c0392b;">TZS '+rptFmt(r.cost)+'</td>'+
+        '<td class="'+(p>=0?'profit-pos':'profit-neg')+'">TZS '+rptFmt(Math.abs(p))+'</td>'+
+        '<td class="'+(m>=0?'profit-pos':'profit-neg')+'">'+m+'%</td>'+
+        '<td>'+r.inQty+'</td>'+
+        '<td>'+r.outQty+'</td>'+
+        '<td>'+(r.inCount+r.outCount)+'</td>'+
+        '</tr>';
+    }).join('')+
+    '<tr style="background:#f0f4f8;font-weight:700;">'+
+    '<td>TOTALS</td>'+
+    '<td style="color:#1a7a45;">TZS '+rptFmt(rows.reduce(function(s,r){return s+r.revenue;},0))+'</td>'+
+    '<td style="color:#c0392b;">TZS '+rptFmt(rows.reduce(function(s,r){return s+r.cost;},0))+'</td>'+
+    '<td class="'+(cumProfit>=0?'profit-pos':'profit-neg')+'">TZS '+rptFmt(Math.abs(cumProfit))+'</td>'+
+    '<td></td>'+
+    '<td>'+rows.reduce(function(s,r){return s+r.inQty;},0)+'</td>'+
+    '<td>'+rows.reduce(function(s,r){return s+r.outQty;},0)+'</td>'+
+    '<td>'+rows.reduce(function(s,r){return s+r.inCount+r.outCount;},0)+'</td>'+
+    '</tr></table></div></div>';
+
+  return trendBars+monthlyTable;
+}
+
+/* ─── EXPORTS ────────────────────────────────────────── */
+function rptExportCSV(){
+  var sub=S.rptTab||'summary';
+  var rows=[];
+  var filename='enm_report_'+sub+'_'+new Date().toISOString().slice(0,10)+'.csv';
+
+  if(sub==='sales'||sub==='summary'){
+    rows.push(['Date','TXN ID','Code','Item','Type','Qty','Unit Price','Total','By','Notes']);
+    rptTxns().forEach(function(t){
+      rows.push([rptDate(t.ts),t.id,t.iid,t.inm,t.type,t.qty,t.price,t.total||0,t.user||'',t.notes||'']);
+    });
+  } else if(sub==='stock'){
+    rows.push(['Code','Item','Category','In Stock','Unit','Buy Price','Sell Price','Stock Cost','Stock Value','Min Level','Location','Status']);
+    rptItems().forEach(function(i){
+      var st=i.qty===0?'OUT OF STOCK':i.qty<=i.minQ?'LOW':'OK';
+      rows.push([i.id,i.name,i.cat,i.qty,i.unit,i.buyP,i.sellP,i.qty*i.buyP,i.qty*i.sellP,i.minQ,i.loc||'',st]);
+    });
+  } else if(sub==='profit'){
+    rows.push(['Code','Item','Category','Units Sold','Revenue','Cost','Profit','Margin %']);
+    var outT=rptTxns().filter(function(t){return t.type==='OUT';});
+    var mp={};
+    outT.forEach(function(t){
+      var it=S.items.find(function(i){return i.id===t.iid;});if(!it)return;
+      if(!mp[t.iid])mp[t.iid]={item:it,units:0,rev:0,cost:0};
+      mp[t.iid].units+=t.qty;mp[t.iid].rev+=(t.total||0);mp[t.iid].cost+=t.qty*it.buyP;
+    });
+    Object.values(mp).sort(function(a,b){return b.rev-a.rev;}).forEach(function(x){
+      var p=x.rev-x.cost;var m=x.rev>0?Math.round(p/x.rev*1000)/10:0;
+      rows.push([x.item.id,x.item.name,x.item.cat,x.units,x.rev,x.cost,p,m+'%']);
+    });
+  } else if(sub==='monthly'){
+    rows.push(['Month','Revenue','Cost','Profit','Margin %','Units In','Units Out','Transactions']);
+    var txns=rptTxns(),months={};
+    txns.forEach(function(t){
+      var m=t.ts?t.ts.slice(0,7):'';
+      if(!months[m])months[m]={m,rev:0,cost:0,inQ:0,outQ:0,cnt:0};
+      if(t.type==='OUT'){months[m].rev+=(t.total||0);months[m].outQ+=t.qty;}
+      else{months[m].cost+=(t.total||0);months[m].inQ+=t.qty;}
+      months[m].cnt++;
+    });
+    Object.values(months).sort(function(a,b){return a.m<b.m?-1:1;}).forEach(function(r){
+      var p=r.rev-r.cost;var mg=r.rev>0?Math.round(p/r.rev*1000)/10:0;
+      rows.push([r.m,r.rev,r.cost,p,mg+'%',r.inQ,r.outQ,r.cnt]);
+    });
+  } else {
+    rows.push(['Report','Generated']);
+    rows.push([sub,new Date().toISOString()]);
+  }
+
+  var csv=rows.map(function(r){return r.map(function(v){return '"'+String(v).replace(/"/g,'""')+'"';}).join(',');}).join('\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download=filename;a.click();
+}
+
+function rptPrint(){
+  var el=document.getElementById('rpt-root');
+  if(!el)return;
+  var w=window.open('','_blank');
+  if(!w)return;
+  w.document.write(
+    '<html><head><title>ENM Technologies — Report</title>'+
+    '<style>*{box-sizing:border-box;margin:0;padding:0;}body{font-family:Arial,sans-serif;font-size:12px;color:#1e293b;padding:20px;}'+
+    '.card{background:#fff;border:1px solid #ddd;border-radius:6px;padding:12px;margin-bottom:12px;page-break-inside:avoid;}'+
+    'table{width:100%;border-collapse:collapse;font-size:11px;}th{background:#f8fafc;padding:6px 8px;border-bottom:1.5px solid #ddd;text-align:left;}'+
+    'td{padding:5px 8px;border-bottom:0.5px solid #eee;}'+
+    '.rpt-bar-bg{background:#f0f4f8;border-radius:4px;height:12px;overflow:hidden;margin-top:2px;}'+
+    '.rpt-bar-fill{height:100%;border-radius:4px;}'+
+    '.rpt-bar-label{display:flex;justify-content:space-between;font-size:11px;margin-bottom:2px;}'+
+    '.profit-pos{color:#1a7a45;font-weight:700;}.profit-neg{color:#c0392b;font-weight:700;}'+
+    '.rpt-kpi{display:inline-block;border:1px solid #ddd;border-radius:6px;padding:10px 14px;margin:4px;text-align:center;min-width:120px;}'+
+    '.badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:10px;font-weight:700;}'+
+    '.b-ok{background:#d4f5e3;color:#1a7a45;}.b-low{background:#fef3cd;color:#856404;}.b-none{background:#fde8e8;color:#c0392b;}'+
+    '.rpt-section-title{font-weight:700;color:#1a2744;margin-bottom:8px;padding-bottom:4px;border-bottom:2px solid #1a2744;}'+
+    'h2{color:#1a2744;margin-bottom:6px;}p{color:#8898aa;font-size:11px;}</style></head><body>'+
+    '<h2>ENM Technologies — Report: '+((S.rptTab||'summary').toUpperCase())+'</h2>'+
+    '<p>Generated: '+new Date().toLocaleString()+(S.rptFrom?' | From: '+S.rptFrom:'')+(S.rptTo?' | To: '+S.rptTo:'')+(S.rptCat!=='all'?' | Category: '+S.rptCat:'')+'</p>'+
+    '<hr style="margin:10px 0;border:none;border-top:2px solid #1a2744;">'+
+    el.innerHTML+'</body></html>'
+  );
+  w.document.close();
+  setTimeout(function(){w.print();},600);
+}
+
+function rptExportFullJSON(){
+  getUsers().then(function(users){
+    var data={
+      company:'ENM Technologies',
+      exportDate:new Date().toISOString(),
+      generatedBy:S.currentUser?S.currentUser.firstName+' '+S.currentUser.lastName:'System',
+      summary:{
+        totalItems:S.items.length,
+        totalTransactions:S.txns.length,
+        totalUsers:users.length,
+        stockValue:S.items.reduce(function(s,i){return s+i.qty*i.sellP;},0)
+      },
+      users:users.map(function(u){return{id:u.id,name:u.firstName+' '+u.lastName,email:u.email,role:u.role};}),
+      items:S.items,
+      transactions:S.txns
+    };
+    var a=document.createElement('a');
+    a.href=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));
+    a.download='enm_full_backup_'+new Date().toISOString().slice(0,10)+'.json';
+    a.click();
+  });
+}
+
+
+
+/* ===== ADMIN RENDER HELPERS ===== */
+function renderItemsTable(){
+  if(!S.items.length) return '<div class="empty" style="padding:20px;text-align:center;color:#8898aa;">No items yet. Use the Add Item tab to add your first item.</div>';
+  var rows = S.items.map(function(i){
+    var cs = catStyle(i.cat);
+    return '<tr>'+
+      '<td><code>'+i.id+'</code></td>'+
+      '<td><strong>'+i.name+'</strong></td>'+
+      '<td><span style="font-size:10px;font-weight:700;padding:1px 7px;border-radius:20px;background:'+cs.bg+';color:'+cs.color+';">'+i.cat+'</span></td>'+
+      '<td>'+i.qty+' '+i.unit+'</td>'+
+      '<td><button class="btn btn-red btn-sm" style="font-size:10px;" data-iid="'+i.id+'" onclick="adminRemoveItem(this.dataset.iid)">Remove</button></td>'+
+      '</tr>';
+  });
+  return rows.join('');
+}
+
+function renderCatsTable(){
+  var rows = Object.keys(CATS).map(function(cat){
+    var cs = CATS[cat];
+    var itemCnt = S.items.filter(function(i){return i.cat===cat;}).length;
+    var isBuiltin = DEFAULT_CATS.hasOwnProperty(cat);
+    return '<tr>'+
+      '<td><span style="display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;background:'+cs.color+';color:#fff;border-radius:5px;font-size:11px;font-weight:700;">'+cs.icon+'</span></td>'+
+      '<td><strong>'+cat+'</strong>'+(isBuiltin?' <span style="font-size:9px;color:#8898aa;">(built-in)</span>':'')+' </td>'+
+      '<td>'+itemCnt+'</td>'+
+      '<td><span style="display:inline-block;width:20px;height:20px;background:'+cs.bg+';border:1px solid '+cs.color+';border-radius:4px;vertical-align:middle;"></span></td>'+
+      '<td>'+(itemCnt===0?
+        '<button class="btn btn-red btn-sm" style="font-size:10px;" data-cat="'+encodeURIComponent(cat)+'" onclick="adminRemoveCat(decodeURIComponent(this.dataset.cat))">Delete</button>':
+        '<span style="font-size:10px;color:#8898aa;">Has items</span>')+
+      '</td></tr>';
+  });
+  return rows.join('');
+}
+
+/* ===== ITEM & CATEGORY MANAGEMENT ===== */
+
+function itmMsg(msg,type){
+  var el=document.getElementById('adm-items-msg');
+  if(!el)return;
+  el.innerHTML='<div class="alert alert-'+(type==='ok'?'ok':'err')+'" style="margin-bottom:8px;">'+msg+'</div>';
+  if(type==='ok')setTimeout(function(){if(el)el.innerHTML='';},5000);
+}
+function catMsg(msg,type){
+  var el=document.getElementById('adm-cats-msg');
+  if(!el)return;
+  el.innerHTML='<div class="alert alert-'+(type==='ok'?'ok':'err')+'" style="margin-bottom:8px;">'+msg+'</div>';
+  if(type==='ok')setTimeout(function(){if(el)el.innerHTML='';},5000);
+}
+
+function adminRemoveItem(id){
+  var item=S.items.find(function(i){return i.id===id;});
+  if(!item)return;
+  if(!confirm('Remove "'+item.name+'" from inventory?\n\nThis will also remove all its transaction history.'))return;
+  S.items=S.items.filter(function(i){return i.id!==id;});
+  S.txns=S.txns.filter(function(t){return t.iid!==id;});
+  saveItems();saveTxns();
+  showMsg('ok','"'+item.name+'" removed from inventory.');
+  render();
+  setTimeout(adminLoadUsers,80);
+}
+
+function adminClearAllItems(){
+  if(!confirm('Remove ALL '+S.items.length+' items from inventory?\n\nAll transaction history will also be cleared.\nThis cannot be undone.'))return;
+  S.items=[];
+  S.txns=[];
+  saveItems();saveTxns();
+  showMsg('ok','All items cleared. Your inventory is now empty — add your own items using the Add Item tab.');
+  render();
+}
+
+function adminAddCat(){
+  var name=(document.getElementById('new-cat-name')||{value:''}).value.trim();
+  if(!name)return catMsg('Please enter a category name.','err');
+  if(name.length<2)return catMsg('Category name must be at least 2 characters.','err');
+  if(CATS[name])return catMsg('"'+name+'" already exists.','err');
+  CATS[name]=nextCatColour(name);
+  saveCats();
+  var el=document.getElementById('new-cat-name');if(el)el.value='';
+  catMsg('Category "'+name+'" added successfully.','ok');
+  render();
+  setTimeout(adminLoadUsers,80);
+}
+
+function adminRemoveCat(name){
+  if(!CATS[name])return;
+  var cnt=S.items.filter(function(i){return i.cat===name;}).length;
+  if(cnt>0)return catMsg('Cannot delete "'+name+'" — it has '+cnt+' item(s). Remove the items first.','err');
+  if(!confirm('Delete category "'+name+'"?'))return;
+  delete CATS[name];
+  saveCats();
+  catMsg('Category "'+name+'" deleted.','ok');
+  render();
+  setTimeout(adminLoadUsers,80);
+}
+
+/* ===== FORM HANDLERS ===== */
+function doAdd(e){e.preventDefault();var fd=new FormData(e.target),d={};fd.forEach(function(v,k){d[k]=v;});if(!d.name||!d.name.trim()){showMsg('err','Item name is required.');return;}addItem(d);}
+function doTxn(e){
+  e.preventDefault();var fd=new FormData(e.target),d={};fd.forEach(function(v,k){d[k]=v;});
+  recTxn(S.found.id,S.txnType,d.qty,d.price,d.notes).then(function(r){
+    if(r.err)showMsg('err',r.err);
+    else{showMsg('ok',(S.txnType==='IN'?'Import':'Sale')+' recorded: '+d.qty+' x '+S.found.name);S.found=null;S.txnType='IN';render();}
+  });
+}
+function doManual(){var vv=((document.getElementById('mid')||{}).value||'').trim().toUpperCase();if(!vv)return;var item=S.items.find(function(i){return i.id===vv;});if(item){S.found=item;render();}else showMsg('err','Code "'+vv+'" not found.');}
+function doPrint(){var el=document.getElementById('qr-print');if(!el)return;var w=window.open('','_blank','width=320,height=320');if(!w)return;w.document.write('<html><body style="text-align:center;font-family:Arial;padding:20px;">'+el.innerHTML+'</body></html>');w.document.close();setTimeout(function(){w.print();},300);}
+function doCSV(){
+  var rows=[['TXN ID','Date','Code','Item','Type','Qty','Unit Price','Total','By','Notes']];
+  [].concat(S.txns).reverse().forEach(function(t){rows.push([t.id,fdt(t.ts),t.iid,t.inm,t.type,t.qty,t.price,t.total||0,t.user||'',t.notes||'']);});
+  var csv=rows.map(function(r){return r.map(function(v){return '"'+v+'"';}).join(',');}).join('\n');
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));
+  a.download='enm_store_'+new Date().toISOString().slice(0,10)+'.csv';
+  a.click();
+}
+
+/* ===== EXPOSE GLOBALS ===== */
+window.startSyncPolling=startSyncPolling;window.stopSyncPolling=stopSyncPolling;
+window.switchAuthTab=switchAuthTab;window.togglePw=togglePw;window.liveCheck=liveCheck;window.fv=fv;
+window.clearSession=clearSession;
+window.switchTab=switchTab;window.startScan=startScan;window.stopScan=stopScan;
+window.doAdd=doAdd;window.doTxn=doTxn;window.doManual=doManual;
+window.doPrint=doPrint;window.doCSV=doCSV;window.rptExportCSV=rptExportCSV;window.rptPrint=rptPrint;window.rptExportFullJSON=rptExportFullJSON;
+window.doLogin=doLogin;window.doRegister=doRegister;window.doLogout=doLogout;
+window.adminChangeRole=adminChangeRole;window.adminResetPw=adminResetPw;
+window.adminChangeMyPw=adminChangeMyPw;window.adminAddUser=adminAddUser;
+window.adminDeleteUser=adminDeleteUser;window.adminExportAll=adminExportAll;
+window.adminLoadUsers=adminLoadUsers;window.adminClearTxns=adminClearTxns;window.adminResetInventory=adminResetInventory;window.admMsg=admMsg;window.adminRemoveItem=adminRemoveItem;window.adminClearAllItems=adminClearAllItems;window.adminAddCat=adminAddCat;window.adminRemoveCat=adminRemoveCat;window.itmMsg=itmMsg;window.catMsg=catMsg;window.renderItemsTable=renderItemsTable;window.renderCatsTable=renderCatsTable;
+window.S=S;
+
+(async function(){await load();render();})();
+</script>
